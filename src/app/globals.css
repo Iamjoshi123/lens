@@ -1,55 +1,51 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@200..800&family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== DARK MODE (default) ===== */
 :root {
-  --background: #0D0D0D;
-  --foreground: #F2F2F2;
-  --surface: #161616;
-  --card: #1E1E1E;
-  --border: #2A2A2A;
-  --muted: #808080;
+  /* Brand Colors */
+  --primary: #FCA311;
+  --secondary: #14213D;
+
+  /* Backgrounds */
+  --background: #14213D;
+  --foreground: #FFFFFF;
+  --surface: #1D2D50;
+  --card: #1D2D50;
+  --border: #2A3B55;
+  --muted: #94A3B8;
+
+  /* Fonts */
+  --font-bricolage: 'Bricolage Grotesque', sans-serif;
+  --font-inter-tight: 'Inter Tight', sans-serif;
 }
 
-/* ===== LIGHT MODE ===== */
-[data-theme="light"] {
-  --background: #FAFAFA;
-  --foreground: #1A1A1A;
-  --surface: #FFFFFF;
-  --card: #F5F5F5;
-  --border: #E0E0E0;
-  --muted: #888888;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+/* Dark Mode / "Luxury" Mode Override (optional if we want a dark mode later, but user asked for specific colors) */
+/* For now, we stick to the user's requested palette primarily */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter-tight);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  font-feature-settings: "cv11", "ss01", "ss03";
-  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-bricolage);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,157 +53,34 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(157, 141, 241, 0.2);
+  background: rgba(20, 33, 61, 0.2);
+  /* Navy with opacity */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(157, 141, 241, 0.35);
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  background: rgba(252, 163, 17, 0.8);
+  /* Gold */
 }
 
 /* Selection */
 ::selection {
-  background: rgba(204, 255, 0, 0.2);
-  color: var(--foreground);
+  background: rgba(252, 163, 17, 0.3);
+  color: var(--secondary);
 }
 
-/* Focus ring */
-*:focus-visible {
-  outline: 1.5px solid rgba(204, 255, 0, 0.35);
-  outline-offset: 2px;
-}
-
-/* Video player native controls override */
-video::-webkit-media-controls {
-  display: none !important;
-}
-
-/* Omnibox */
-.omnibox-glow {
-  background: var(--card);
-  border: 1px solid var(--border);
-  transition: all 0.3s ease;
-}
-
-.omnibox-glow:focus-within {
-  border-color: rgba(204, 255, 0, 0.35);
-  box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.06);
-}
-
-/* Heatmap seekbar */
-.heatmap-seekbar {
-  position: relative;
-  height: 5px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: height 0.15s ease;
-}
-
+/* Heatmap & Player Controls */
 .heatmap-seekbar:hover {
   height: 8px;
 }
 
-/* Glass */
 .glass {
-  background: color-mix(in srgb, var(--background) 85%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-/* Brief card */
-.brief-card {
-  transition: all 0.2s ease;
-}
-
-.brief-card:hover {
-  background: var(--card);
-  border-color: var(--border);
-}
-
-/* Video overlay gradient */
-.video-overlay-gradient {
-  background: linear-gradient(to top,
-      rgba(13, 13, 13, 0.9) 0%,
-      rgba(13, 13, 13, 0.3) 40%,
-      transparent 100%);
-}
-
-/* Markdown preview */
-.markdown-preview h1 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--foreground);
-}
-
-.markdown-preview h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: var(--foreground);
-}
-
-.markdown-preview h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: var(--foreground);
-}
-
-.markdown-preview p {
-  margin-bottom: 0.6rem;
-  line-height: 1.65;
-  color: var(--muted);
-}
-
-.markdown-preview ul,
-.markdown-preview ol {
-  padding-left: 1.25rem;
-  margin-bottom: 0.6rem;
-}
-
-.markdown-preview li {
-  margin-bottom: 0.2rem;
-  color: var(--muted);
-}
-
-.markdown-preview code {
-  background: rgba(157, 141, 241, 0.1);
-  padding: 0.1rem 0.35rem;
-  border-radius: 3px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 0.85em;
-  color: #9D8DF1;
-}
-
-.markdown-preview blockquote {
-  border-left: 2px solid rgba(204, 255, 0, 0.3);
-  padding-left: 0.75rem;
-  margin: 0.5rem 0;
-  color: var(--muted);
-  font-style: italic;
-}
-
-.markdown-preview strong {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
-/* Shimmer */
-.shimmer {
-  background: linear-gradient(90deg,
-      rgba(255, 255, 255, 0.02) 25%,
-      rgba(255, 255, 255, 0.05) 50%,
-      rgba(255, 255, 255, 0.02) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
-}
-
+/* Utility for text balance */
 @layer utilities {
   .text-balance {
     text-wrap: balance;

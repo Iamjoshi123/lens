@@ -12,15 +12,9 @@ import {
     Trash2,
     ChevronDown,
     FileText,
-    Archive,
     Users,
     UserPlus,
-    X,
     Play,
-    Heart,
-    ThumbsDown,
-    Tag,
-    Clapperboard,
     Zap,
     Bookmark,
 } from "lucide-react";
@@ -40,7 +34,7 @@ export default function BriefSidebar() {
     const [showAddCollab, setShowAddCollab] = useState(false);
     const [collabName, setCollabName] = useState("");
     const [collabEmail, setCollabEmail] = useState("");
-    const [showArchived, setShowArchived] = useState(false);
+
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (brief) {
@@ -74,7 +68,8 @@ export default function BriefSidebar() {
             .join("")
             .toUpperCase()
             .slice(0, 2);
-        const colors = ["#e8a838", "#5090f0", "#40c070", "#e06060", "#a080e0"];
+        // Luxury palette for avatars
+        const colors = ["#FCA311", "#14213D", "#E5E5E5", "#000000"];
         const color = colors[brief.collaborators.length % colors.length];
         dispatch({
             type: "ADD_COLLABORATOR",
@@ -94,9 +89,8 @@ export default function BriefSidebar() {
         setShowAddCollab(false);
     };
 
-    // Separate active and archived briefs
+    // Separate active and archived briefs (archived hidden for now)
     const activeBriefs = state.briefs.filter((b) => !b.archived);
-    const archivedBriefs = state.briefs.filter((b) => b.archived);
 
     // Referenced videos with performance data
     const referencedVideos = brief
@@ -106,9 +100,6 @@ export default function BriefSidebar() {
     // Liked / disliked videos
     const likedVideos = brief
         ? state.videos.filter((v) => brief.likedVideoIds.includes(v.id))
-        : [];
-    const dislikedVideos = brief
-        ? state.videos.filter((v) => brief.dislikedVideoIds.includes(v.id))
         : [];
 
     // Badge counts
@@ -129,29 +120,31 @@ export default function BriefSidebar() {
                     animate={{ width: 380, opacity: 1 }}
                     exit={{ width: 0, opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    className="h-full border-l border-lens-border/50 bg-lens-surface flex flex-col overflow-hidden"
+                    className="h-full border-l border-gray-200 bg-white flex flex-col overflow-hidden text-lens-secondary shadow-xl z-10"
                 >
                     {/* ===== BRIEF SELECTOR (always visible) ===== */}
-                    <div className="p-3 border-b border-lens-border/50">
+                    <div className="p-4 border-b border-gray-100">
                         <div className="relative">
                             <button
                                 onClick={() => setShowBriefSelect(!showBriefSelect)}
-                                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-lens-card border border-lens-border/50 hover:border-white/10 transition-all text-left"
+                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-gray-50 border border-gray-100 hover:border-lens-primary/30 transition-all text-left group`}
                             >
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <FileText size={14} className="text-lens-muted shrink-0" />
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <div className="w-8 h-8 rounded bg-white border border-gray-200 flex items-center justify-center shrink-0 shadow-sm text-lens-primary">
+                                        <FileText size={16} />
+                                    </div>
                                     <div className="min-w-0">
-                                        <p className="text-sm text-lens-text font-medium truncate">
+                                        <p className="text-sm font-bold truncate text-lens-secondary group-hover:text-lens-primary transition-colors">
                                             {brief?.title || "Select a Brief"}
                                         </p>
                                         {brief && (
-                                            <p className="text-[11px] text-lens-muted truncate">{brief.campaign}</p>
+                                            <p className="text-[10px] text-gray-400 truncate uppercase tracking-wider font-semibold">{brief.campaign}</p>
                                         )}
                                     </div>
                                 </div>
                                 <ChevronDown
                                     size={14}
-                                    className={`text-lens-muted transition-transform ${showBriefSelect ? "rotate-180" : ""}`}
+                                    className={`text-gray-400 transition-transform ${showBriefSelect ? "rotate-180" : ""}`}
                                 />
                             </button>
 
@@ -161,7 +154,7 @@ export default function BriefSidebar() {
                                         initial={{ opacity: 0, y: -5 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -5 }}
-                                        className="absolute top-full left-0 right-0 mt-1 bg-lens-card border border-lens-border rounded-lg shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto custom-scrollbar"
+                                        className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 overflow-hidden max-h-80 overflow-y-auto custom-scrollbar"
                                     >
                                         {activeBriefs.map((b) => (
                                             <button
@@ -170,61 +163,24 @@ export default function BriefSidebar() {
                                                     dispatch({ type: "SET_ACTIVE_BRIEF", payload: b.id });
                                                     setShowBriefSelect(false);
                                                 }}
-                                                className={`w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-white/[0.03] transition-colors ${b.id === state.activeBriefId ? "bg-white/[0.04] border-l-2 border-lens-text" : ""}`}
+                                                className={`w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-gray-50 transition-colors ${b.id === state.activeBriefId ? "bg-lens-primary/5 border-l-4 border-lens-primary" : "border-l-4 border-transparent"}`}
                                             >
-                                                <FileText size={13} className={b.id === state.activeBriefId ? "text-lens-text" : "text-lens-muted"} />
                                                 <div className="min-w-0 flex-1">
-                                                    <p className="text-sm text-lens-text truncate">{b.title}</p>
-                                                    <p className="text-[11px] text-lens-muted">{b.angle || b.campaign}</p>
+                                                    <p className={`text-sm font-medium ${b.id === state.activeBriefId ? "text-lens-primary" : "text-gray-700"}`}>{b.title}</p>
+                                                    <p className="text-[10px] text-gray-400">{b.angle || b.campaign}</p>
                                                 </div>
                                             </button>
                                         ))}
-
-                                        {archivedBriefs.length > 0 && (
-                                            <>
-                                                <button
-                                                    onClick={() => setShowArchived(!showArchived)}
-                                                    className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-white/[0.03] transition-colors border-t border-lens-border/30"
-                                                >
-                                                    <Archive size={12} className="text-lens-muted/50" />
-                                                    <span className="text-[11px] text-lens-muted/50">
-                                                        Archived ({archivedBriefs.length})
-                                                    </span>
-                                                    <ChevronDown
-                                                        size={11}
-                                                        className={`text-lens-muted/40 ml-auto transition-transform ${showArchived ? "rotate-180" : ""}`}
-                                                    />
-                                                </button>
-                                                {showArchived &&
-                                                    archivedBriefs.map((b) => (
-                                                        <div key={b.id} className="w-full flex items-center gap-2 px-3 py-2 text-left opacity-50">
-                                                            <FileText size={13} className="text-lens-muted/50" />
-                                                            <div className="min-w-0 flex-1">
-                                                                <p className="text-sm text-lens-muted truncate">{b.title}</p>
-                                                            </div>
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    dispatch({ type: "UNARCHIVE_BRIEF", payload: b.id });
-                                                                }}
-                                                                className="text-[10px] text-lens-muted hover:text-lens-text px-1.5 py-0.5 rounded bg-white/[0.04] hover:bg-white/[0.08] transition-colors"
-                                                            >
-                                                                Restore
-                                                            </button>
-                                                        </div>
-                                                    ))}
-                                            </>
-                                        )}
 
                                         <button
                                             onClick={() => {
                                                 setShowBriefSelect(false);
                                                 setShowNewBrief(true);
                                             }}
-                                            className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-white/[0.03] transition-colors border-t border-lens-border/50"
+                                            className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-gray-50 transition-colors border-t border-gray-100 text-lens-primary font-medium text-sm"
                                         >
-                                            <Plus size={13} className="text-lens-muted" />
-                                            <span className="text-sm text-lens-muted">New Brief</span>
+                                            <Plus size={14} />
+                                            <span>Create New Brief</span>
                                         </button>
                                     </motion.div>
                                 )}
@@ -239,15 +195,15 @@ export default function BriefSidebar() {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                className="border-b border-lens-border/50 overflow-hidden"
+                                className="border-b border-gray-100 overflow-hidden bg-gray-50"
                             >
-                                <div className="p-3 space-y-2">
+                                <div className="p-4 space-y-3">
                                     <input
                                         type="text"
                                         value={newBriefTitle}
                                         onChange={(e) => setNewBriefTitle(e.target.value)}
                                         placeholder="Brief title..."
-                                        className="w-full px-3 py-2 rounded-lg bg-lens-bg border border-lens-border/50 text-lens-text text-sm placeholder:text-lens-muted/40 focus:border-white/15 transition-colors outline-none"
+                                        className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm focus:border-lens-primary outline-none"
                                         autoFocus
                                     />
                                     <input
@@ -255,18 +211,18 @@ export default function BriefSidebar() {
                                         value={newBriefCampaign}
                                         onChange={(e) => setNewBriefCampaign(e.target.value)}
                                         placeholder="Campaign name..."
-                                        className="w-full px-3 py-2 rounded-lg bg-lens-bg border border-lens-border/50 text-lens-text text-sm placeholder:text-lens-muted/40 focus:border-white/15 transition-colors outline-none"
+                                        className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-sm focus:border-lens-primary outline-none"
                                     />
                                     <div className="flex gap-2">
                                         <button
                                             onClick={handleCreateBrief}
-                                            className="flex-1 py-2 rounded-lg bg-white/[0.06] text-lens-text text-sm font-medium hover:bg-white/[0.1] transition-colors"
+                                            className="flex-1 py-1.5 rounded-lg bg-lens-secondary text-white text-sm font-medium hover:bg-lens-secondary/90 transition-colors"
                                         >
                                             Create
                                         </button>
                                         <button
                                             onClick={() => setShowNewBrief(false)}
-                                            className="px-3 py-2 rounded-lg bg-lens-card text-lens-muted text-sm hover:text-lens-text transition-colors"
+                                            className="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 text-sm hover:bg-white transition-colors"
                                         >
                                             Cancel
                                         </button>
@@ -277,29 +233,27 @@ export default function BriefSidebar() {
                     </AnimatePresence>
 
                     {/* ===== TAB BAR ===== */}
-                    <div className="flex border-b border-lens-border/50">
+                    <div className="flex border-b border-gray-100 bg-white sticky top-0 px-2 pt-2">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.key}
                                 onClick={() => setActiveTab(tab.key)}
-                                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all relative ${activeTab === tab.key
-                                    ? "text-lens-text"
-                                    : "text-lens-muted/50 hover:text-lens-muted"
+                                className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-semibold transition-all relative rounded-t-lg ${activeTab === tab.key
+                                    ? "text-lens-secondary bg-gray-50"
+                                    : "text-gray-400 hover:text-lens-secondary hover:bg-gray-50/50"
                                     }`}
                             >
                                 {tab.icon}
                                 <span>{tab.label}</span>
                                 {tab.badge && (
-                                    <span className="min-w-[16px] h-[16px] rounded-full bg-white/[0.08] text-lens-text text-[9px] font-semibold flex items-center justify-center">
+                                    <span className="min-w-[16px] h-[16px] rounded-full bg-lens-primary text-white text-[9px] font-bold flex items-center justify-center shadow-sm">
                                         {tab.badge}
                                     </span>
                                 )}
-                                {/* Active indicator */}
                                 {activeTab === tab.key && (
                                     <motion.div
                                         layoutId="sidebar-tab"
-                                        className="absolute bottom-0 left-2 right-2 h-[2px] bg-lens-text rounded-full"
-                                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                                        className="absolute top-0 left-0 right-0 h-[2px] bg-lens-primary rounded-t-full"
                                     />
                                 )}
                             </button>
@@ -307,119 +261,81 @@ export default function BriefSidebar() {
                     </div>
 
                     {/* ===== TAB CONTENT ===== */}
-                    <div className="flex-1 overflow-y-auto custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto custom-scrollbar bg-gray-50/30">
                         {brief ? (
                             <>
                                 {/* ─── TAB: BRIEF ─── */}
                                 {activeTab === "brief" && (
                                     <div className="flex flex-col h-full">
-                                        {/* Brief metadata */}
-                                        <div className="px-3 py-2.5 border-b border-lens-border/30">
-                                            <div className="flex items-center gap-3 text-[11px] text-lens-muted/40">
-                                                <div className="flex items-center gap-1">
-                                                    <Clapperboard size={10} />
-                                                    <span>{brief.campaign}</span>
-                                                </div>
-                                                {brief.angle && (
-                                                    <div className="flex items-center gap-1">
-                                                        <Tag size={10} />
-                                                        <span>{brief.angle}</span>
-                                                    </div>
-                                                )}
+                                        {/* Toolbar */}
+                                        <div className="flex items-center justify-between px-4 py-2 bg-white border-b border-gray-100">
+                                            <div className="flex items-center gap-2">
+                                                <Zap size={12} className="text-gray-400" />
+                                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Editor</span>
+                                            </div>
+                                            <div className="flex bg-gray-100 rounded-lg p-0.5">
+                                                <button
+                                                    onClick={() => setIsPreview(false)}
+                                                    className={`p-1.5 rounded text-xs transition-all ${!isPreview ? "bg-white shadow-sm text-lens-secondary" : "text-gray-400 hover:text-gray-600"}`}
+                                                    title="Edit"
+                                                >
+                                                    <PenLine size={12} />
+                                                </button>
+                                                <button
+                                                    onClick={() => setIsPreview(true)}
+                                                    className={`p-1.5 rounded text-xs transition-all ${isPreview ? "bg-white shadow-sm text-lens-secondary" : "text-gray-400 hover:text-gray-600"}`}
+                                                    title="Preview"
+                                                >
+                                                    <Eye size={12} />
+                                                </button>
                                             </div>
                                         </div>
 
-                                        {/* Brief editor */}
-                                        <div className="flex flex-col flex-1">
-                                            <div className="flex items-center justify-between px-3 py-1.5 border-b border-lens-border/20">
-                                                <div className="flex items-center gap-1.5">
-                                                    <Zap size={10} className="text-lens-muted/40" />
-                                                    <span className="text-[10px] text-lens-muted/40 font-medium uppercase tracking-wider">
-                                                        Brief
-                                                    </span>
+                                        <div className="flex-1 p-4">
+                                            {isPreview ? (
+                                                <div className="markdown-preview text-sm text-gray-700">
+                                                    <ReactMarkdown>{brief.content}</ReactMarkdown>
                                                 </div>
-                                                <div className="flex items-center gap-1">
-                                                    <button
-                                                        onClick={() => setIsPreview(false)}
-                                                        className={`p-1.5 rounded text-xs transition-colors ${!isPreview ? "text-lens-text" : "text-lens-muted/40 hover:text-lens-text"}`}
-                                                        title="Edit"
-                                                    >
-                                                        <PenLine size={12} />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setIsPreview(true)}
-                                                        className={`p-1.5 rounded text-xs transition-colors ${isPreview ? "text-lens-text" : "text-lens-muted/40 hover:text-lens-text"}`}
-                                                        title="Preview"
-                                                    >
-                                                        <Eye size={12} />
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex-1 px-3 py-2">
-                                                {isPreview ? (
-                                                    <div className="markdown-preview text-sm">
-                                                        <ReactMarkdown>{brief.content}</ReactMarkdown>
-                                                    </div>
-                                                ) : (
-                                                    <textarea
-                                                        value={brief.content}
-                                                        onChange={handleContentChange}
-                                                        className="w-full h-full min-h-[280px] bg-transparent text-lens-text text-sm font-mono leading-relaxed resize-none outline-none placeholder:text-lens-muted/30"
-                                                        placeholder="Write your creative brief in Markdown..."
-                                                        spellCheck={false}
-                                                    />
-                                                )}
-                                            </div>
+                                            ) : (
+                                                <textarea
+                                                    value={brief.content}
+                                                    onChange={handleContentChange}
+                                                    className="w-full h-full min-h-[300px] bg-transparent text-gray-800 text-sm font-mono leading-relaxed resize-none outline-none placeholder:text-gray-300"
+                                                    placeholder="# Creative Brief\n\nStart typing..."
+                                                    spellCheck={false}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 )}
 
                                 {/* ─── TAB: SAVED ─── */}
                                 {activeTab === "saved" && (
-                                    <div className="divide-y divide-lens-border/20">
+                                    <div className="p-4 space-y-6">
                                         {/* Hook Bank */}
-                                        <div className="p-3">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="flex items-center gap-1.5">
-                                                    <Scissors size={12} className="text-lens-muted/50" />
-                                                    <span className="text-[10px] text-lens-muted/50 font-medium uppercase tracking-wider">
-                                                        Hook Bank
-                                                    </span>
-                                                    {brief.hooks.length > 0 && (
-                                                        <span className="min-w-[16px] h-[16px] rounded-full bg-white/[0.08] text-lens-text text-[9px] font-semibold flex items-center justify-center">
-                                                            {brief.hooks.length}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-
+                                        <div>
+                                            <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                                <Scissors size={12} /> Hook Bank
+                                            </h3>
                                             {brief.hooks.length === 0 ? (
-                                                <div className="text-center py-4 rounded-lg border border-dashed border-lens-border/20">
-                                                    <Scissors size={16} className="text-lens-muted/20 mx-auto mb-1" />
-                                                    <p className="text-[10px] text-lens-muted/30">
-                                                        Snip hooks from ads to collect them here
-                                                    </p>
+                                                <div className="text-center py-6 border border-dashed border-gray-200 rounded-lg">
+                                                    <p className="text-xs text-gray-400">No hooks snipped yet</p>
                                                 </div>
                                             ) : (
-                                                <div className="space-y-1">
+                                                <div className="space-y-2">
                                                     {brief.hooks.map((hook) => (
-                                                        <div
-                                                            key={hook.id}
-                                                            className="group flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/[0.03] transition-colors"
-                                                        >
-                                                            <div className="w-6 h-6 rounded bg-white/[0.04] flex items-center justify-center shrink-0">
-                                                                <Play size={8} className="text-lens-muted ml-0.5" />
+                                                        <div key={hook.id} className="bg-white border border-gray-100 p-2 rounded-lg shadow-sm flex items-center justify-between group">
+                                                            <div className="flex items-center gap-2 overflow-hidden">
+                                                                <div className="w-8 h-8 rounded bg-lens-primary/10 flex items-center justify-center text-lens-primary shrink-0">
+                                                                    <Play size={10} fill="currentColor" />
+                                                                </div>
+                                                                <div className="min-w-0">
+                                                                    <p className="text-xs font-medium truncate">{hook.videoTitle}</p>
+                                                                    <p className="text-[9px] text-gray-400 font-mono">{hook.timestamp}</p>
+                                                                </div>
                                                             </div>
-                                                            <div className="min-w-0 flex-1">
-                                                                <p className="text-[11px] text-lens-text truncate">{hook.videoTitle}</p>
-                                                                <p className="text-[9px] text-lens-muted/40 font-mono">{hook.timestamp}</p>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => handleRemoveHook(hook.id)}
-                                                                className="opacity-0 group-hover:opacity-100 p-1 rounded text-lens-muted hover:text-red-400 transition-all"
-                                                            >
-                                                                <Trash2 size={10} />
+                                                            <button onClick={() => handleRemoveHook(hook.id)} className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                                                                <Trash2 size={12} />
                                                             </button>
                                                         </div>
                                                     ))}
@@ -427,239 +343,88 @@ export default function BriefSidebar() {
                                             )}
                                         </div>
 
-                                        {/* Liked Ads */}
-                                        {likedVideos.length > 0 && (
-                                            <div className="p-3">
-                                                <div className="flex items-center gap-1.5 mb-2">
-                                                    <Heart size={12} className="text-red-400/60 fill-red-400/60" />
-                                                    <span className="text-[10px] text-lens-muted/50 font-medium uppercase tracking-wider">
-                                                        Liked
-                                                    </span>
-                                                    <span className="text-[10px] text-lens-muted/30 ml-auto">{likedVideos.length}</span>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    {likedVideos.map((vid) => (
-                                                        <div
-                                                            key={vid.id}
-                                                            onClick={() => dispatch({ type: "SET_ACTIVE_VIDEO", payload: vid.id })}
-                                                            className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/[0.03] cursor-pointer transition-colors"
-                                                        >
-                                                            <Heart size={10} className="text-red-400/60 fill-red-400/60 shrink-0" />
-                                                            <p className="text-[11px] text-lens-text truncate flex-1">{vid.title}</p>
-                                                            <span className="text-[9px] text-lens-muted/30">{vid.impressions}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Passed Ads */}
-                                        {dislikedVideos.length > 0 && (
-                                            <div className="p-3">
-                                                <div className="flex items-center gap-1.5 mb-2">
-                                                    <ThumbsDown size={12} className="text-neutral-400/50" />
-                                                    <span className="text-[10px] text-lens-muted/50 font-medium uppercase tracking-wider">
-                                                        Passed
-                                                    </span>
-                                                    <span className="text-[10px] text-lens-muted/30 ml-auto">{dislikedVideos.length}</span>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    {dislikedVideos.map((vid) => (
-                                                        <div
-                                                            key={vid.id}
-                                                            onClick={() => dispatch({ type: "SET_ACTIVE_VIDEO", payload: vid.id })}
-                                                            className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/[0.03] cursor-pointer transition-colors opacity-50"
-                                                        >
-                                                            <ThumbsDown size={10} className="text-neutral-400/60 shrink-0" />
-                                                            <p className="text-[11px] text-lens-muted truncate flex-1 line-through">{vid.title}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
                                         {/* References */}
-                                        {referencedVideos.length > 0 && (
-                                            <div className="p-3">
-                                                <div className="flex items-center gap-1.5 mb-2">
-                                                    <Bookmark size={12} className="text-lens-muted/50" />
-                                                    <span className="text-[10px] text-lens-muted/50 font-medium uppercase tracking-wider">
-                                                        References
-                                                    </span>
-                                                    <span className="text-[10px] text-lens-muted/30 ml-auto">{referencedVideos.length}</span>
-                                                </div>
-                                                <div className="space-y-1">
-                                                    {referencedVideos.map((vid) => (
-                                                        <div
-                                                            key={vid.id}
-                                                            onClick={() => dispatch({ type: "SET_ACTIVE_VIDEO", payload: vid.id })}
-                                                            className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/[0.03] cursor-pointer transition-colors"
-                                                        >
-                                                            <div className="w-6 h-6 rounded bg-white/[0.04] flex items-center justify-center shrink-0">
-                                                                {vid.performanceTier && (
-                                                                    <div className={`w-1.5 h-1.5 rounded-full ${vid.performanceTier === "top" ? "bg-emerald-400" :
-                                                                        vid.performanceTier === "high" ? "bg-sky-400" : "bg-amber-400"
-                                                                        }`} />
-                                                                )}
-                                                            </div>
-                                                            <div className="min-w-0 flex-1">
-                                                                <p className="text-[11px] text-lens-text truncate">{vid.title}</p>
-                                                                <div className="flex items-center gap-2 text-[9px] text-lens-muted/30">
-                                                                    <span>{vid.platform}</span>
-                                                                    <span>·</span>
-                                                                    <span>{vid.impressions}</span>
-                                                                </div>
-                                                            </div>
+                                        <div>
+                                            <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                                <Bookmark size={12} /> References
+                                            </h3>
+                                            <div className="space-y-2">
+                                                {referencedVideos.map((vid) => (
+                                                    <div key={vid.id} className="bg-white border border-gray-100 p-2 rounded-lg shadow-sm flex items-center gap-2 hover:border-lens-primary/30 transition-colors cursor-pointer" onClick={() => dispatch({ type: "SET_ACTIVE_VIDEO", payload: vid.id })}>
+                                                        <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center text-gray-400 shrink-0">
+                                                            <Bookmark size={12} />
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                        <div className="min-w-0 flex-1">
+                                                            <p className="text-xs font-medium truncate text-lens-secondary">{vid.title}</p>
+                                                            <p className="text-[9px] text-gray-400">{vid.platform}</p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                {referencedVideos.length === 0 && (
+                                                    <p className="text-xs text-gray-400 italic">No references saved</p>
+                                                )}
                                             </div>
-                                        )}
-
-                                        {/* Empty state */}
-                                        {brief.hooks.length === 0 && likedVideos.length === 0 && referencedVideos.length === 0 && (
-                                            <div className="flex flex-col items-center justify-center py-12 gap-2">
-                                                <Bookmark size={24} className="text-lens-muted/15" />
-                                                <p className="text-[11px] text-lens-muted/30 text-center">
-                                                    Like ads, snip hooks, or save references<br />and they&apos;ll appear here
-                                                </p>
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 )}
 
                                 {/* ─── TAB: TEAM ─── */}
                                 {activeTab === "team" && (
-                                    <div className="p-3">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-1.5">
-                                                <Users size={12} className="text-lens-muted/50" />
-                                                <span className="text-[10px] text-lens-muted/50 font-medium uppercase tracking-wider">
-                                                    Collaborators
-                                                </span>
-                                            </div>
-                                            <button
-                                                onClick={() => setShowAddCollab(!showAddCollab)}
-                                                className="flex items-center gap-1 text-[10px] text-lens-muted/50 hover:text-lens-text px-2 py-1 rounded-md hover:bg-white/[0.04] transition-all"
-                                            >
-                                                <UserPlus size={11} />
-                                                <span>Invite</span>
+                                    <div className="p-4">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                                                <Users size={12} /> Team Members
+                                            </h3>
+                                            <button onClick={() => setShowAddCollab(!showAddCollab)} className="text-xs text-lens-primary font-medium hover:underline flex items-center gap-1">
+                                                <UserPlus size={12} /> Invite
                                             </button>
                                         </div>
 
-                                        {/* Invite form */}
-                                        <AnimatePresence>
-                                            {showAddCollab && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: "auto", opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    className="overflow-hidden mb-3"
-                                                >
-                                                    <div className="p-3 rounded-lg bg-lens-card border border-lens-border/30 space-y-2">
-                                                        <input
-                                                            type="text"
-                                                            value={collabName}
-                                                            onChange={(e) => setCollabName(e.target.value)}
-                                                            placeholder="Name"
-                                                            className="w-full px-3 py-2 rounded-lg bg-lens-bg border border-lens-border/50 text-lens-text text-sm placeholder:text-lens-muted/30 outline-none focus:border-white/15 transition-colors"
-                                                            autoFocus
-                                                        />
-                                                        <input
-                                                            type="email"
-                                                            value={collabEmail}
-                                                            onChange={(e) => setCollabEmail(e.target.value)}
-                                                            placeholder="Email"
-                                                            className="w-full px-3 py-2 rounded-lg bg-lens-bg border border-lens-border/50 text-lens-text text-sm placeholder:text-lens-muted/30 outline-none focus:border-white/15 transition-colors"
-                                                        />
-                                                        <div className="flex gap-2">
-                                                            <button
-                                                                onClick={handleAddCollaborator}
-                                                                className="flex-1 py-2 rounded-lg bg-white/[0.06] text-lens-text text-sm font-medium hover:bg-white/[0.1] transition-colors"
-                                                            >
-                                                                Add
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setShowAddCollab(false)}
-                                                                className="px-3 py-2 rounded-lg text-lens-muted text-sm hover:text-lens-text transition-colors"
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-
-                                        {/* Collaborator list */}
-                                        <div className="space-y-1">
+                                        <div className="space-y-2">
                                             {brief.collaborators.map((c) => (
-                                                <div
-                                                    key={c.id}
-                                                    className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/[0.02] transition-colors"
-                                                >
-                                                    <div
-                                                        className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-semibold text-white shrink-0"
-                                                        style={{ backgroundColor: c.color }}
-                                                    >
+                                                <div key={c.id} className="flex items-center gap-3 p-2 bg-white rounded-lg border border-gray-100 shadow-sm">
+                                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm" style={{ backgroundColor: c.color || "#14213D" }}>
                                                         {c.initials}
                                                     </div>
-                                                    <div className="min-w-0 flex-1">
-                                                        <p className="text-sm text-lens-text">{c.name}</p>
-                                                        <p className="text-[10px] text-lens-muted/40 truncate">{c.email}</p>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-xs font-bold text-lens-secondary">{c.name}</p>
+                                                        <p className="text-[10px] text-gray-400 truncate">{c.email}</p>
                                                     </div>
-                                                    {c.id === "u1" ? (
-                                                        <span className="text-[9px] text-lens-muted/30 px-1.5 py-0.5 rounded bg-white/[0.03]">Owner</span>
-                                                    ) : (
-                                                        <button
-                                                            onClick={() =>
-                                                                dispatch({
-                                                                    type: "REMOVE_COLLABORATOR",
-                                                                    payload: { briefId: brief.id, collaboratorId: c.id },
-                                                                })
-                                                            }
-                                                            className="opacity-0 group-hover:opacity-100 p-1.5 rounded text-lens-muted hover:text-red-400 transition-all"
-                                                        >
-                                                            <X size={12} />
-                                                        </button>
-                                                    )}
                                                 </div>
                                             ))}
                                         </div>
 
-                                        {brief.collaborators.length === 1 && !showAddCollab && (
-                                            <div className="text-center py-6">
-                                                <Users size={20} className="text-lens-muted/15 mx-auto mb-2" />
-                                                <p className="text-[10px] text-lens-muted/30">
-                                                    Invite teammates to collaborate on this brief
-                                                </p>
+                                        {showAddCollab && (
+                                            <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-100 space-y-2 animate-in fade-in slide-in-from-top-2">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Name"
+                                                    className="w-full text-xs p-2 rounded border border-gray-200 outline-none focus:border-lens-primary"
+                                                    value={collabName}
+                                                    onChange={e => setCollabName(e.target.value)}
+                                                />
+                                                <input
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    className="w-full text-xs p-2 rounded border border-gray-200 outline-none focus:border-lens-primary"
+                                                    value={collabEmail}
+                                                    onChange={e => setCollabEmail(e.target.value)}
+                                                />
+                                                <button onClick={handleAddCollaborator} className="w-full py-1.5 bg-lens-secondary text-white text-xs font-bold rounded hover:bg-lens-secondary/90">
+                                                    Send Invite
+                                                </button>
                                             </div>
                                         )}
                                     </div>
                                 )}
                             </>
                         ) : (
-                            <div className="flex items-center justify-center h-full">
-                                <p className="text-lens-muted/40 text-sm">No brief selected</p>
+                            <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-2">
+                                <FileText size={24} className="opacity-20" />
+                                <p className="text-xs">No brief selected</p>
                             </div>
                         )}
                     </div>
-
-                    {/* ===== FOOTER — EXPORT + ARCHIVE ===== */}
-                    {brief && (
-                        <div className="p-3 border-t border-lens-border/50 space-y-1.5">
-                            <button className="w-full py-2.5 rounded-lg bg-white/[0.06] text-lens-text font-medium text-sm hover:bg-white/[0.1] transition-all active:scale-[0.98]">
-                                Export Brief
-                            </button>
-                            <button
-                                onClick={() => dispatch({ type: "ARCHIVE_BRIEF", payload: brief.id })}
-                                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-lens-muted/40 text-[11px] hover:text-lens-muted hover:bg-white/[0.02] transition-all"
-                            >
-                                <Archive size={12} />
-                                <span>Archive this brief</span>
-                            </button>
-                        </div>
-                    )}
                 </motion.div>
             )}
         </AnimatePresence>

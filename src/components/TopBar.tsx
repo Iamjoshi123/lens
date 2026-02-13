@@ -6,16 +6,16 @@ import {
     ChevronRight,
     Library,
     Clapperboard,
-    PanelRightOpen,
-    PanelRightClose,
     Home,
     Search,
     X,
     Loader2,
+    FileText,
+    PanelRightOpen,
+    PanelRightClose
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar() {
     const { state, dispatch, getActiveBrief, searchVideos } = useStore();
@@ -57,48 +57,55 @@ export default function TopBar() {
         <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between px-5 py-2.5 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-lg z-50 relative"
+            className="flex items-center justify-between px-6 py-3 border-b border-lens-border bg-white z-50 relative shadow-sm"
         >
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-2 text-[13px]">
-                <Link
-                    href="/"
-                    className="flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
-                >
-                    <Home size={13} />
-                    <span>Home</span>
-                </Link>
-                <ChevronRight size={11} className="text-[var(--border)]" />
-                <span className="flex items-center gap-1.5 text-[var(--muted)]">
-                    <Library size={13} />
-                    Library
-                </span>
-                {brief && (
-                    <>
-                        <ChevronRight size={11} className="text-[var(--border)]" />
-                        <span className="flex items-center gap-1.5 text-[var(--muted)]">
-                            <Clapperboard size={13} />
-                            {brief.campaign}
-                        </span>
-                        <ChevronRight size={11} className="text-[var(--border)]" />
-                        <span className="text-[var(--foreground)] font-medium">{brief.title}</span>
-                    </>
-                )}
+            {/* LEFT: Branding & Breadcrumbs */}
+            <div className="flex items-center gap-4">
+                {/* Logo Placeholder */}
+                <div className="w-8 h-8 bg-lens-secondary rounded-lg flex items-center justify-center">
+                    <span className="text-lens-primary font-bold text-lg">L</span>
+                </div>
+
+                <div className="h-6 w-px bg-lens-border" />
+
+                <div className="flex items-center gap-2 text-[13px] font-medium">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-1.5 text-lens-muted hover:text-lens-secondary transition-colors"
+                    >
+                        <Home size={14} />
+                        <span className="hidden md:inline">Home</span>
+                    </Link>
+                    <ChevronRight size={12} className="text-gray-300" />
+                    <span className="flex items-center gap-1.5 text-lens-muted">
+                        <Library size={14} />
+                        Library
+                    </span>
+                    {brief && (
+                        <>
+                            <ChevronRight size={12} className="text-gray-300" />
+                            <span className="flex items-center gap-1.5 text-lens-secondary font-semibold">
+                                <Clapperboard size={14} className="text-lens-primary" />
+                                {brief.campaign}
+                            </span>
+                        </>
+                    )}
+                </div>
             </div>
 
-            {/* Center — search */}
+            {/* CENTER: Search */}
             <div className="absolute left-1/2 -translate-x-1/2 flex items-center">
                 <AnimatePresence mode="wait">
                     {searchOpen ? (
                         <motion.div
                             key="search-input"
                             initial={{ width: 200, opacity: 0 }}
-                            animate={{ width: 360, opacity: 1 }}
+                            animate={{ width: 400, opacity: 1 }}
                             exit={{ width: 200, opacity: 0 }}
                             transition={{ duration: 0.2 }}
                             className="relative"
                         >
-                            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-lens-muted/50" />
+                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-lens-secondary" />
                             <input
                                 ref={inputRef}
                                 type="text"
@@ -108,14 +115,14 @@ export default function TopBar() {
                                     if (e.key === "Enter") handleSearch(searchInput);
                                     if (e.key === "Escape") setSearchOpen(false);
                                 }}
-                                placeholder="Search ads — brand, category, platform..."
-                                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm text-[var(--foreground)] placeholder:text-[var(--muted)]/40 outline-none focus:border-[#CCFF00]/30 transition-colors"
+                                placeholder="Search by brand, hook, or platform..."
+                                className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-gray-50 border border-transparent focus:bg-white focus:border-lens-primary/50 text-sm text-lens-secondary placeholder:text-gray-400 outline-none transition-all shadow-inner"
                             />
                             <button
                                 onClick={() => setSearchOpen(false)}
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)]/40 hover:text-[var(--foreground)] transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-lens-secondary transition-colors"
                             >
-                                <X size={14} />
+                                <X size={16} />
                             </button>
                         </motion.div>
                     ) : (
@@ -125,46 +132,39 @@ export default function TopBar() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSearchOpen(true)}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[12px] text-[var(--muted)]/60 hover:text-[var(--muted)] hover:border-[var(--foreground)]/10 transition-all"
+                            className="flex items-center gap-3 px-4 py-2 rounded-xl bg-gray-50 border border-transparent hover:border-lens-border hover:bg-white text-sm text-gray-400 transition-all group"
                         >
-                            <Search size={12} />
-                            <span>Search ads</span>
-                            <kbd className="ml-2 text-[10px] text-[var(--muted)]/30 bg-[var(--background)] px-1.5 py-0.5 rounded">/</kbd>
+                            <Search size={16} className="text-lens-secondary group-hover:text-lens-primary transition-colors" />
+                            <span>Search creative ads...</span>
+                            <kbd className="hidden md:inline-block ml-4 text-[10px] font-mono text-gray-300 bg-white border border-gray-200 px-1.5 py-0.5 rounded shadow-sm">/</kbd>
                         </motion.button>
                     )}
                 </AnimatePresence>
 
                 {state.isSearching && (
-                    <Loader2 size={14} className="ml-2 text-[var(--muted)] animate-spin" />
+                    <Loader2 size={16} className="ml-3 text-lens-primary animate-spin" />
                 )}
             </div>
 
-            {/* Right side controls */}
-            <div className="flex items-center gap-3">
-                {/* Search result count */}
-                {state.searchResults.length > 0 && !state.isSearching && (
-                    <span className="text-[11px] text-[var(--muted)]/50">
-                        {state.searchResults.length} ads
-                    </span>
-                )}
-
-                {/* Auto-save indicator */}
-                <div className="flex items-center gap-1.5 text-[11px] text-[var(--muted)]/50">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#CCFF00]/60" />
-                    Auto-saved
-                </div>
-
-                {/* Theme toggle */}
-                <ThemeToggle />
-
-                {/* Sidebar toggle */}
+            {/* RIGHT: controls */}
+            <div className="flex items-center gap-4">
+                {/* Brief Sidebar Toggle */}
                 <button
                     onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}
-                    className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card)] transition-all"
-                    title={state.sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all border ${state.sidebarOpen
+                            ? "bg-lens-secondary text-white border-lens-secondary"
+                            : "bg-white text-lens-secondary border-gray-200 hover:border-lens-primary hover:text-lens-primary"
+                        }`}
                 >
-                    {state.sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+                    <FileText size={16} />
+                    <span className="text-sm font-medium hidden md:inline">Briefs</span>
+                    {state.sidebarOpen ? <PanelRightClose size={16} className="opacity-50" /> : <PanelRightOpen size={16} className="opacity-50" />}
                 </button>
+
+                {/* User Avatar (Profile) placeholder */}
+                <div className="w-9 h-9 rounded-full bg-lens-primary flex items-center justify-center text-lens-secondary font-bold text-sm border-2 border-white shadow-sm cursor-pointer hover:scale-105 transition-transform">
+                    JS
+                </div>
             </div>
         </motion.div>
     );
