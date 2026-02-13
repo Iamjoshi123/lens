@@ -37,6 +37,7 @@ const HlsVideo = forwardRef<HTMLVideoElement, HlsVideoProps>(({ src, onReady, ..
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 if (onReady) onReady();
             });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             hls.on(Hls.Events.ERROR, (event: any, data: any) => {
                 if (data.fatal) {
                     switch (data.type) {
