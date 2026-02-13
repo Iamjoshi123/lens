@@ -24,7 +24,7 @@ const platformColors: Record<string, { bg: string; text: string }> = {
 const tierBadge: Record<string, { bg: string; text: string; label: string }> = {
     top: { bg: "bg-[#CCFF00]/15", text: "text-[#CCFF00]", label: "⚡ Top" },
     high: { bg: "bg-[#9D8DF1]/15", text: "text-[#9D8DF1]", label: "High" },
-    mid: { bg: "bg-white/10 dark:bg-white/10", text: "text-current opacity-50", label: "Mid" },
+    mid: { bg: "bg-white/10", text: "text-current opacity-50", label: "Mid" },
     low: { bg: "bg-[#FF3E3E]/10", text: "text-[#FF3E3E]/70", label: "Low" },
 };
 
@@ -121,24 +121,31 @@ function VideoCard({
     const tier = video.performanceTier ? tierBadge[video.performanceTier] : null;
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovering, setIsHovering] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
 
     const isLiked = brief?.likedVideoIds?.includes(video.id);
     const isInBrief = brief?.referenceVideoIds?.includes(video.id);
 
     const handleMouseEnter = useCallback(() => {
         setIsHovering(true);
-        if (videoRef.current) {
-            videoRef.current.muted = true;
-            videoRef.current.currentTime = 0;
-            videoRef.current.play().catch(() => { });
+        const vid = videoRef.current;
+        if (vid) {
+            // Load the video if not loaded yet
+            if (vid.readyState === 0) {
+                vid.load();
+            }
+            vid.currentTime = 0;
+            vid.play().catch(() => { });
         }
     }, []);
 
     const handleMouseLeave = useCallback(() => {
         setIsHovering(false);
-        if (videoRef.current) {
-            videoRef.current.pause();
-            videoRef.current.currentTime = 0;
+        setVideoReady(false);
+        const vid = videoRef.current;
+        if (vid) {
+            vid.pause();
+            vid.currentTime = 0;
         }
     }, []);
 
@@ -169,63 +176,64 @@ function VideoCard({
             transition={{ duration: 0.2, delay: Math.min(index * 0.03, 0.3) }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="group relative flex flex-col rounded-lg overflow-hidden bg-[var(--card)] border border-[var(--border)] hover:border-[#9D8DF1]/30 transition-all duration-200 hover:shadow-lg"
+            className="group relative flex flex-col rounded-lg overflow-hidden bg-[var(--card)] border border-[var(--border)] hover:border-[#9D8DF1]/30 transition-all duration-200 hover:shadow-lg cursor-pointer"
+            onClick={onClick}
         >
             {/* Thumbnail / Video area — compact 4:3 landscape */}
-            <button
-                onClick={onClick}
-                className="relative aspect-[4/3] overflow-hidden w-full text-left cursor-pointer"
-            >
-                {/* Thumbnail image — always visible until hover */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {video.thumbnail && (
-                    <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${isHovering ? "opacity-0" : "opacity-100"}`}
-                    />
-                )}
-
-                {/* Video on hover */}
+            <div className="relative aspect-[4/3] overflow-hidden bg-neutral-900">
+                {/* Video element — uses poster for thumbnail, plays on hover */}
                 <video
                     ref={videoRef}
                     src={video.videoUrl}
+                    poster={video.thumbnail || undefined}
                     muted
                     playsInline
-                    preload="none"
-                    poster={video.thumbnail}
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${isHovering ? "opacity-100" : "opacity-0"}`}
+                    preload="metadata"
+                    onCanPlay={() => setVideoReady(true)}
+                    className="absolute inset-0 w-full h-full object-cover"
                 />
 
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
+                {/* Thumbnail image fallback — covers video until it's actually playing */}
+                {video.thumbnail && !(isHovering && videoReady) && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="absolute inset-0 w-full h-full object-cover z-[1]"
+                    />
+                )}
 
-                {/* Play icon on hover */}
-                <div className={`absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-150 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-                    <div className="w-9 h-9 rounded-full bg-[#CCFF00]/25 backdrop-blur-sm flex items-center justify-center border border-[#CCFF00]/30">
-                        <Play size={14} className="text-white ml-0.5" fill="white" />
+                {/* Gradient overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 z-[2]" />
+
+                {/* Play icon — shows on hover if video isn't ready yet */}
+                {isHovering && !videoReady && (
+                    <div className="absolute inset-0 z-[3] flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center animate-pulse">
+                            <Play size={12} className="text-white ml-0.5" fill="white" />
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Platform badge */}
-                <div className={`absolute top-1.5 left-1.5 z-20 px-1.5 py-px rounded text-[8px] font-bold uppercase tracking-wider backdrop-blur-sm ${platform.bg} ${platform.text}`}>
+                <div className={`absolute top-1.5 left-1.5 z-[4] px-1.5 py-px rounded text-[8px] font-bold uppercase tracking-wider backdrop-blur-sm ${platform.bg} ${platform.text}`}>
                     {video.platform}
                 </div>
 
                 {/* Tier */}
                 {tier && (
-                    <div className={`absolute top-1.5 right-1.5 z-20 px-1.5 py-px rounded text-[8px] font-semibold backdrop-blur-sm ${tier.bg} ${tier.text}`}>
+                    <div className={`absolute top-1.5 right-1.5 z-[4] px-1.5 py-px rounded text-[8px] font-semibold backdrop-blur-sm ${tier.bg} ${tier.text}`}>
                         {tier.label}
                     </div>
                 )}
 
                 {/* Duration badge */}
-                <div className="absolute bottom-1.5 right-1.5 z-20 px-1.5 py-px rounded bg-black/60 text-[9px] text-white/80 font-mono backdrop-blur-sm">
+                <div className="absolute bottom-1.5 right-1.5 z-[4] px-1.5 py-px rounded bg-black/60 text-[9px] text-white/80 font-mono backdrop-blur-sm">
                     {video.duration}s
                 </div>
 
-                {/* Quick action buttons — appear on hover */}
-                <div className={`absolute bottom-1.5 left-1.5 z-20 flex items-center gap-1 transition-opacity duration-150 ${isHovering ? "opacity-100" : "opacity-0"}`}>
+                {/* Quick action buttons on hover */}
+                <div className={`absolute bottom-1.5 left-1.5 z-[4] flex items-center gap-1 transition-opacity duration-150 ${isHovering ? "opacity-100" : "opacity-0"}`}>
                     <button
                         onClick={handleLike}
                         className={`p-1 rounded backdrop-blur-sm transition-all ${isLiked
@@ -245,9 +253,9 @@ function VideoCard({
                         <Plus size={11} className={isInBrief ? "rotate-45" : ""} />
                     </button>
                 </div>
-            </button>
+            </div>
 
-            {/* Card info — compact */}
+            {/* Card info — compact text below thumbnail */}
             <div className="px-2.5 py-2 flex flex-col gap-0.5">
                 <p className="text-[11px] font-medium text-[var(--foreground)] leading-tight line-clamp-1">{video.title}</p>
                 <div className="flex items-center justify-between">
