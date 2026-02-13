@@ -12,6 +12,7 @@ import {
     Search,
     Heart,
     Plus,
+    Clapperboard,
 } from "lucide-react";
 import { VideoItem } from "@/lib/mockData";
 
@@ -122,6 +123,7 @@ function VideoCard({
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [isHovering, setIsHovering] = useState(false);
     const [videoReady, setVideoReady] = useState(false);
+    const [imgError, setImgError] = useState(false);
 
     const isLiked = brief?.likedVideoIds?.includes(video.id);
     const isInBrief = brief?.referenceVideoIds?.includes(video.id);
@@ -193,14 +195,25 @@ function VideoCard({
                     className="absolute inset-0 w-full h-full object-cover"
                 />
 
-                {/* Thumbnail image fallback — covers video until it's actually playing */}
-                {video.thumbnail && !(isHovering && videoReady) && (
+                {/* Thumbnail image fallback */}
+                {video.thumbnail && !imgError && !(isHovering && videoReady) && (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                         src={video.thumbnail}
                         alt={video.title}
+                        onError={() => setImgError(true)}
                         className="absolute inset-0 w-full h-full object-cover z-[1]"
                     />
+                )}
+
+                {/* Fallback placeholder if image error or missing */}
+                {(!video.thumbnail || imgError) && !(isHovering && videoReady) && (
+                    <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center bg-[#1A1A1A] gap-2 p-4 text-center">
+                        <Clapperboard size={24} className="text-[#CCFF00]/40" />
+                        <span className="text-[10px] text-[var(--muted)] font-medium uppercase tracking-wider">
+                            {video.brand}
+                        </span>
+                    </div>
                 )}
 
                 {/* Gradient overlays */}
