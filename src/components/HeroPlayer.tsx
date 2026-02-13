@@ -198,9 +198,9 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
     const isReferenced = brief?.referenceVideoIds.includes(video?.id || "");
 
     const platformColors: Record<string, string> = {
-        meta: "bg-blue-500/30 text-blue-300",
-        tiktok: "bg-pink-500/30 text-pink-300",
-        youtube: "bg-red-500/30 text-red-300",
+        meta: "bg-[#9D8DF1]/20 text-[#9D8DF1]",
+        tiktok: "bg-[#FF3E3E]/20 text-[#FF3E3E]",
+        youtube: "bg-red-500/20 text-red-400",
     };
 
     if (!video) {
@@ -225,7 +225,7 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
             {showBackToGrid && onBackToGrid && (
                 <button
                     onClick={onBackToGrid}
-                    className="absolute top-4 left-4 z-40 flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 text-white/80 text-sm hover:bg-black/80 hover:text-white transition-all"
+                    className="absolute top-4 left-4 z-40 flex items-center gap-2 px-3 py-2 rounded-lg bg-[#0D0D0D]/80 backdrop-blur-sm border border-[#CCFF00]/20 text-[#CCFF00]/80 text-sm hover:bg-[#0D0D0D] hover:text-[#CCFF00] transition-all"
                 >
                     <ArrowLeft size={14} />
                     <Grid2X2 size={14} />
@@ -248,14 +248,14 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                     }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
                     className="relative flex items-center justify-center"
-                    style={{ height: "100%", maxHeight: "calc(100vh - 60px)" }}
+                    style={{ height: "100%", maxHeight: "75vh" }}
                 >
                     <div
                         className="relative rounded-xl overflow-hidden bg-black shadow-2xl shadow-black/50"
                         style={{
                             aspectRatio: "9/16",
                             height: "100%",
-                            maxHeight: "calc(100vh - 80px)",
+                            maxHeight: "72vh",
                         }}
                     >
                         <video
@@ -316,10 +316,10 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                                         height: `${zone.end - zone.start}%`,
                                         backgroundColor:
                                             zone.type === "hook"
-                                                ? "#F5A623"
+                                                ? "#CCFF00"
                                                 : zone.type === "proof"
-                                                    ? "#3B82F6"
-                                                    : "#EF4444",
+                                                    ? "#9D8DF1"
+                                                    : "#FF3E3E",
                                     }}
                                     title={zone.label}
                                 />
@@ -411,12 +411,12 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                 >
                     <div
                         className={`w-12 h-12 rounded-full flex items-center justify-center transition-all group-active:scale-95 ${isReferenced
-                            ? "bg-green-500/20 border border-green-500/40"
+                            ? "bg-[#CCFF00]/20 border border-[#CCFF00]/40"
                             : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20"
                             }`}
                     >
                         {isReferenced ? (
-                            <Check size={20} className="text-green-400" />
+                            <Check size={20} className="text-[#CCFF00]" />
                         ) : (
                             <BookmarkPlus size={20} className="text-white" />
                         )}
@@ -459,10 +459,10 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                     title="Like this ad"
                 >
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all group-active:scale-95 ${brief?.likedVideoIds.includes(video?.id || "")
-                        ? "bg-red-500/20 border border-red-500/40"
+                        ? "bg-[#FF3E3E]/20 border border-[#FF3E3E]/40"
                         : "bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20"
                         }`}>
-                        <Heart size={20} className={brief?.likedVideoIds.includes(video?.id || "") ? "text-red-400 fill-red-400" : "text-white"} />
+                        <Heart size={20} className={brief?.likedVideoIds.includes(video?.id || "") ? "text-[#FF3E3E] fill-[#FF3E3E]" : "text-white"} />
                     </div>
                     <span className="text-[10px] text-white/70 font-medium">
                         {brief?.likedVideoIds.includes(video?.id || "") ? "Liked" : "Like"}
@@ -561,12 +561,12 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                         exit={{ opacity: 0, scale: 0.8 }}
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
                     >
-                        <div className="bg-lens-gold/20 border border-lens-gold/40 rounded-2xl px-8 py-4 backdrop-blur-lg">
+                        <div className="bg-[#CCFF00]/15 border border-[#CCFF00]/30 rounded-2xl px-8 py-4 backdrop-blur-lg">
                             <div className="flex items-center gap-3">
-                                <Scissors size={24} className="text-lens-gold" />
+                                <Scissors size={24} className="text-[#CCFF00]" />
                                 <div>
-                                    <p className="text-lens-gold font-semibold text-lg">Hook Snipped!</p>
-                                    <p className="text-lens-gold/70 text-sm">First 3s saved to Hook Bank</p>
+                                    <p className="text-[#CCFF00] font-semibold text-lg">Hook Snipped!</p>
+                                    <p className="text-[#CCFF00]/70 text-sm">First 3s saved to Hook Bank</p>
                                 </div>
                             </div>
                         </div>
@@ -583,12 +583,12 @@ export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: Her
                         exit={{ opacity: 0, scale: 0.8 }}
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
                     >
-                        <div className="bg-green-500/20 border border-green-500/40 rounded-2xl px-8 py-4 backdrop-blur-lg">
+                        <div className="bg-[#CCFF00]/15 border border-[#CCFF00]/30 rounded-2xl px-8 py-4 backdrop-blur-lg">
                             <div className="flex items-center gap-3">
-                                <BookmarkPlus size={24} className="text-green-400" />
+                                <BookmarkPlus size={24} className="text-[#CCFF00]" />
                                 <div>
-                                    <p className="text-green-400 font-semibold text-lg">Added to Brief!</p>
-                                    <p className="text-green-400/70 text-sm">Video saved as reference</p>
+                                    <p className="text-[#CCFF00] font-semibold text-lg">Added to Brief!</p>
+                                    <p className="text-[#CCFF00]/70 text-sm">Video saved as reference</p>
                                 </div>
                             </div>
                         </div>

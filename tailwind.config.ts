@@ -13,26 +13,29 @@ const config: Config = {
         foreground: "var(--foreground)",
         lens: {
           // Core palette
-          bg: "#07004D",           // Deep navy — primary background
-          surface: "#0d0860",      // Slightly lighter navy — panels
-          card: "#140e6e",         // Card backgrounds
-          border: "#2D82B7",       // Blue — borders & dividers
-          muted: "#8ba4c4",        // Muted text on dark
-          text: "#F3DFBF",         // Warm cream — primary text
+          bg: "#0D0D0D",             // Deep Onyx — main canvas
+          surface: "#161616",        // Slightly lighter — panels
+          card: "#1E1E1E",           // Card backgrounds
+          border: "#2A2A2A",         // Borders & dividers
+          muted: "#808080",          // Muted text
+          text: "#F2F2F2",           // Ghost Grey — primary text
           // Accents
-          accent: "#42E2B8",       // Teal — primary accent / CTAs
-          "accent-dim": "#34b896", // Dimmed teal
-          blue: "#2D82B7",        // Blue — secondary
-          "blue-dim": "#246a96",
-          coral: "#EB8A90",       // Coral — alerts / special
-          "coral-dim": "#d07078",
-          // Semantic (mapped to palette)
-          hook: "#42E2B8",        // Teal for hooks
-          proof: "#2D82B7",       // Blue for proof
-          cta: "#EB8A90",         // Coral for CTAs
-          green: "#42E2B8",       // Teal as green replacement
-          gold: "#42E2B8",        // Teal replaces gold
-          "gold-dim": "#34b896",
+          lime: "#CCFF00",           // Radioactive Lime — CTA
+          "lime-dim": "#A3CC00",     // Dimmed lime
+          mauve: "#9D8DF1",          // Muted Mauve — secondary
+          "mauve-dim": "#7D6DD1",    // Dimmed mauve
+          red: "#FF3E3E",            // Glitch Red — errors/alerts
+          "red-dim": "#CC3232",      // Dimmed red
+          // Semantic aliases
+          accent: "#CCFF00",         // Primary CTA
+          gold: "#CCFF00",           // Alias for backward compat
+          "gold-dim": "#A3CC00",
+          blue: "#9D8DF1",           // Secondary alias
+          "blue-dim": "#7D6DD1",
+          hook: "#CCFF00",           // Lime for hooks
+          proof: "#9D8DF1",          // Mauve for proof
+          cta: "#FF3E3E",            // Red for CTAs
+          green: "#CCFF00",          // Lime as green replacement
         },
       },
       fontFamily: {
@@ -48,10 +51,10 @@ const config: Config = {
       keyframes: {
         "glow-pulse": {
           "0%, 100%": {
-            boxShadow: "0 0 0 4px rgba(45, 130, 183, 0.08)",
+            boxShadow: "0 0 0 4px rgba(204, 255, 0, 0.04)",
           },
           "50%": {
-            boxShadow: "0 0 0 4px rgba(45, 130, 183, 0.15)",
+            boxShadow: "0 0 0 4px rgba(204, 255, 0, 0.1)",
           },
         },
         "fade-in": {

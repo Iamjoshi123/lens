@@ -71,7 +71,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Skincare",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 20, type: "hook", label: "Attention Hook" },
@@ -100,7 +100,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "tiktok",
         category: "Pet Care",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 18, type: "hook", label: "Curiosity Hook" },
@@ -129,7 +129,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Beverages",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "ASMR Hook" },
@@ -159,7 +159,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "tiktok",
         category: "Fitness",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/movie.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 22, type: "hook", label: "Comedy Hook" },
@@ -188,7 +188,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "youtube",
         category: "Fashion",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 12, type: "hook", label: "Emotional Hook" },
@@ -217,7 +217,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Home & Living",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
         duration: 52,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "ASMR Visual Hook" },
@@ -246,7 +246,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "tiktok",
         category: "Food & Beverage",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "Speed Hook" },
@@ -275,7 +275,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Sleep & Wellness",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/movie.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 12, type: "hook", label: "Problem Hook" },
@@ -304,7 +304,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "tiktok",
         category: "Personal Care",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 20, type: "hook", label: "Transformation Hook" },
@@ -332,7 +332,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "youtube",
         category: "Office & Productivity",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 10, type: "hook", label: "Lifestyle Hook" },
@@ -361,7 +361,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Fitness",
         thumbnail: "",
-        videoUrl: "https://www.w3schools.com/html/movie.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 18, type: "hook", label: "Listicle Hook" },
@@ -389,7 +389,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         platform: "meta",
         category: "Non-Profit",
         thumbnail: "",
-        videoUrl: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "Emotional Hook" },
