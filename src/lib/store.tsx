@@ -36,6 +36,7 @@ type Action =
     | { type: "UNARCHIVE_BRIEF"; payload: string }
     | { type: "ADD_COLLABORATOR"; payload: { briefId: string; collaborator: Collaborator } }
     | { type: "REMOVE_COLLABORATOR"; payload: { briefId: string; collaboratorId: string } }
+    | { type: "CLEAR_SEARCH" }
     | { type: "LOAD_STATE"; payload: Partial<AppState> };
 
 function reducer(state: AppState, action: Action): AppState {
@@ -46,6 +47,8 @@ function reducer(state: AppState, action: Action): AppState {
             return { ...state, searchResults: action.payload, isSearching: false };
         case "SET_SEARCHING":
             return { ...state, isSearching: action.payload };
+        case "CLEAR_SEARCH":
+            return { ...state, searchQuery: "", searchResults: [], isSearching: false };
         case "SET_ACTIVE_VIDEO":
             return { ...state, activeVideoId: action.payload };
         case "SET_ACTIVE_BRIEF":

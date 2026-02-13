@@ -12,20 +12,27 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         lens: {
-          bg: "#0c0c11",
-          surface: "#121218",
-          card: "#18181f",
-          border: "#24242e",
-          muted: "#64648a",
-          text: "#d8d8e8",
-          gold: "#e8a838",
-          "gold-dim": "#c08a28",
-          blue: "#5090f0",
-          "blue-dim": "#3870d0",
-          hook: "#e8a838",
-          proof: "#5090f0",
-          cta: "#e06060",
-          green: "#40c070",
+          // Core palette
+          bg: "#07004D",           // Deep navy — primary background
+          surface: "#0d0860",      // Slightly lighter navy — panels
+          card: "#140e6e",         // Card backgrounds
+          border: "#2D82B7",       // Blue — borders & dividers
+          muted: "#8ba4c4",        // Muted text on dark
+          text: "#F3DFBF",         // Warm cream — primary text
+          // Accents
+          accent: "#42E2B8",       // Teal — primary accent / CTAs
+          "accent-dim": "#34b896", // Dimmed teal
+          blue: "#2D82B7",        // Blue — secondary
+          "blue-dim": "#246a96",
+          coral: "#EB8A90",       // Coral — alerts / special
+          "coral-dim": "#d07078",
+          // Semantic (mapped to palette)
+          hook: "#42E2B8",        // Teal for hooks
+          proof: "#2D82B7",       // Blue for proof
+          cta: "#EB8A90",         // Coral for CTAs
+          green: "#42E2B8",       // Teal as green replacement
+          gold: "#42E2B8",        // Teal replaces gold
+          "gold-dim": "#34b896",
         },
       },
       fontFamily: {
@@ -41,10 +48,10 @@ const config: Config = {
       keyframes: {
         "glow-pulse": {
           "0%, 100%": {
-            boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.02)",
+            boxShadow: "0 0 0 4px rgba(45, 130, 183, 0.08)",
           },
           "50%": {
-            boxShadow: "0 0 0 4px rgba(255, 255, 255, 0.05)",
+            boxShadow: "0 0 0 4px rgba(45, 130, 183, 0.15)",
           },
         },
         "fade-in": {

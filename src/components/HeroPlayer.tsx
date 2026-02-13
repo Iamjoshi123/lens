@@ -16,9 +16,16 @@ import {
     Heart,
     ThumbsDown,
     Eye,
+    Grid2X2,
+    ArrowLeft,
 } from "lucide-react";
 
-export default function HeroPlayer() {
+interface HeroPlayerProps {
+    showBackToGrid?: boolean;
+    onBackToGrid?: () => void;
+}
+
+export default function HeroPlayer({ showBackToGrid = false, onBackToGrid }: HeroPlayerProps) {
     const { state, dispatch, getActiveVideo, getActiveBrief, snipHook } = useStore();
     const video = getActiveVideo();
     const brief = getActiveBrief();
@@ -214,6 +221,18 @@ export default function HeroPlayer() {
             ref={containerRef}
             className="flex-1 flex items-center justify-center bg-black relative overflow-hidden"
         >
+            {/* ===== BACK TO GRID BUTTON ===== */}
+            {showBackToGrid && onBackToGrid && (
+                <button
+                    onClick={onBackToGrid}
+                    className="absolute top-4 left-4 z-40 flex items-center gap-2 px-3 py-2 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10 text-white/80 text-sm hover:bg-black/80 hover:text-white transition-all"
+                >
+                    <ArrowLeft size={14} />
+                    <Grid2X2 size={14} />
+                    <span>Results</span>
+                </button>
+            )}
+
             {/* ===== VERTICAL VIDEO (9:16) ===== */}
             <AnimatePresence mode="wait">
                 <motion.div

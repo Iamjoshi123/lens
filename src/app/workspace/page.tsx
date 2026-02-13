@@ -1,16 +1,20 @@
 "use client";
 
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useStore } from "@/lib/store";
 import TopBar from "@/components/TopBar";
 import HeroPlayer from "@/components/HeroPlayer";
 import BriefSidebar from "@/components/BriefSidebar";
-import { motion } from "framer-motion";
+import SearchGrid from "@/components/SearchGrid";
+import { motion, AnimatePresence } from "framer-motion";
+
+type ViewMode = "player" | "grid";
 
 function WorkspaceContent() {
     const searchParams = useSearchParams();
     const { state, dispatch, searchVideos } = useStore();
+    const [viewMode, setViewMode] = useState<ViewMode>("player");
 
     useEffect(() => {
         const q = searchParams.get("q");
@@ -25,12 +29,30 @@ function WorkspaceContent() {
         }
     }, [searchParams, searchVideos, dispatch]);
 
-    // Set first search result as active video if none selected
+    // Switch to grid view when search results arrive
     useEffect(() => {
-        if (state.searchResults.length > 0 && !state.activeVideoId) {
-            dispatch({ type: "SET_ACTIVE_VIDEO", payload: state.searchResults[0].id });
+        if (state.searchResults.length > 0 && !state.isSearching) {
+            setViewMode("grid");
         }
-    }, [state.searchResults, state.activeVideoId, dispatch]);
+    }, [state.searchResults, state.isSearching]);
+
+    // Switch back to player when search is cleared
+    useEffect(() => {
+        if (state.searchQuery === "" && state.searchResults.length === 0) {
+            setViewMode("player");
+        }
+    }, [state.searchQuery, state.searchResults]);
+
+    const handleSelectFromGrid = (videoId: string) => {
+        dispatch({ type: "SET_ACTIVE_VIDEO", payload: videoId });
+        setViewMode("player");
+    };
+
+    const handleBackToGrid = () => {
+        if (state.searchResults.length > 0) {
+            setViewMode("grid");
+        }
+    };
 
     return (
         <motion.div
@@ -41,13 +63,26 @@ function WorkspaceContent() {
             {/* Top Bar */}
             <TopBar />
 
-            {/* Main content: Reel player + Brief sidebar */}
-            <div className="flex-1 flex overflow-hidden">
-                {/* Reel-style video feed — takes full remaining space */}
-                <HeroPlayer />
+            {/* Main content */}
+            <div className="flex-1 flex overflow-hidden relative">
+                {/* Reel-style video feed */}
+                <HeroPlayer
+                    showBackToGrid={viewMode === "player" && state.searchResults.length > 0}
+                    onBackToGrid={handleBackToGrid}
+                />
 
                 {/* Brief Sidebar */}
                 <BriefSidebar />
+
+                {/* Grid overlay when searching */}
+                <AnimatePresence>
+                    {viewMode === "grid" && (
+                        <SearchGrid
+                            onSelectVideo={handleSelectFromGrid}
+                            onClose={() => setViewMode("player")}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </motion.div>
     );

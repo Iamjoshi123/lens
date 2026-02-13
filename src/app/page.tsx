@@ -38,7 +38,7 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-lens-bg relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-radial from-lens-gold/[0.03] via-transparent to-transparent blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-radial from-[#2D82B7]/[0.06] via-transparent to-transparent blur-3xl" />
       </div>
 
       {/* Top bar */}
@@ -66,7 +66,7 @@ export default function LandingPage() {
         >
           <h1 className="text-4xl font-extrabold text-lens-text mb-3 tracking-tight">
             What ads do you want to{" "}
-            <span className="bg-gradient-to-r from-lens-gold via-yellow-400 to-lens-gold bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#42E2B8] via-[#2D82B7] to-[#42E2B8] bg-clip-text text-transparent">
               deconstruct?
             </span>
           </h1>
@@ -88,7 +88,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-3 px-5 py-4">
               <Search
                 size={20}
-                className={`shrink-0 transition-colors duration-300 ${isFocused ? "text-lens-gold" : "text-lens-muted"
+                className={`shrink-0 transition-colors duration-300 ${isFocused ? "text-[#42E2B8]" : "text-lens-muted"
                   }`}
               />
               <input
@@ -106,7 +106,7 @@ export default function LandingPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleSearch()}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-lens-gold to-lens-gold-dim text-lens-bg font-semibold text-sm hover:shadow-lg hover:shadow-lens-gold/20 transition-shadow shrink-0"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#42E2B8] to-[#2D82B7] text-[#07004D] font-semibold text-sm hover:shadow-lg hover:shadow-[#42E2B8]/20 transition-shadow shrink-0"
               >
                 <Sparkles size={14} />
                 Search Ads
@@ -129,7 +129,7 @@ export default function LandingPage() {
             <button
               key={i}
               onClick={() => handleSearch(s)}
-              className="text-xs text-lens-muted hover:text-lens-gold px-3 py-1.5 rounded-full bg-lens-card/60 border border-lens-border/40 hover:border-lens-gold/30 transition-all"
+              className="text-xs text-lens-muted hover:text-[#42E2B8] px-3 py-1.5 rounded-full bg-lens-card/60 border border-lens-border/20 hover:border-[#42E2B8]/30 transition-all"
             >
               {s}
             </button>
@@ -157,10 +157,10 @@ export default function LandingPage() {
               <div
                 key={brief.id}
                 onClick={() => router.push(`/workspace?brief=${brief.id}`)}
-                className="shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl bg-lens-card/50 border border-lens-border/30 hover:border-lens-gold/30 cursor-pointer transition-all group"
+                className="shrink-0 flex items-center gap-3 px-4 py-3 rounded-xl bg-lens-card/50 border border-lens-border/20 hover:border-[#42E2B8]/30 cursor-pointer transition-all group"
               >
-                <div className="w-8 h-8 rounded-lg bg-lens-gold/10 flex items-center justify-center shrink-0">
-                  <FileText size={14} className="text-lens-gold/60" />
+                <div className="w-8 h-8 rounded-lg bg-[#42E2B8]/10 flex items-center justify-center shrink-0">
+                  <FileText size={14} className="text-[#42E2B8]/60" />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm text-lens-text font-medium truncate max-w-[200px]">
@@ -172,7 +172,7 @@ export default function LandingPage() {
                 </div>
                 <ArrowRight
                   size={14}
-                  className="text-lens-muted/30 group-hover:text-lens-gold/50 transition-colors shrink-0 ml-2"
+                  className="text-lens-muted/30 group-hover:text-[#42E2B8]/50 transition-colors shrink-0 ml-2"
                 />
               </div>
             ))}
