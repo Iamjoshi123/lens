@@ -82,7 +82,7 @@ This is the core content entity — each record represents one ad creative sourc
 | `platform` | enum | `meta`, `tiktok`, `youtube` |
 | `category` | string | E.g. "Skincare", "Fitness", "Food & Beverage" |
 | `thumbnailUrl` | string | CDN URL for thumbnail image |
-| `videoUrl` | string | CDN URL for video file (MP4) |
+| `videoUrl` | string | CDN URL for video file (MP4 or HLS .m3u8) |
 | `duration` | integer | Video duration in seconds |
 | `spend` | string? | Estimated ad spend, e.g. "$45K" |
 | `impressions` | string? | E.g. "2.3M" |
@@ -518,7 +518,7 @@ flowchart TD
 1. **Fetch**: Poll ad library APIs on schedule (hourly/daily)
 2. **Deduplicate**: Check if ad already exists by source URL or content hash
 3. **Download**: Store video file in object storage (S3/GCS)
-4. **Transcode**: Generate web-optimized MP4 (H.264, 720p max for bandwidth)
+4. **Transcode**: Generate web-optimized MP4 (H.264) and HLS stream (.m3u8) for adaptive streaming
 5. **Thumbnail**: Extract frame at 1s as JPEG thumbnail
 6. **Transcript**: Run Whisper/Deepgram for speech-to-text with timestamps
 7. **Heatmap**: AI model analyzes video structure to identify hook/proof/CTA zones
@@ -796,7 +796,7 @@ This section maps the current frontend state actions to backend API calls, to gu
 
 ### 8.2 Video Delivery
 
-- **Format**: H.264 MP4, web-optimized (moov atom at start)
+- **Format**: HLS (.m3u8) preferred for adaptive bitrate; H.264 MP4 as fallback
 - **Resolution**: Up to 720p for bandwidth efficiency
 - **Aspect Ratio**: 9:16 (vertical) is the primary format
 - **CDN**: Videos must be served from edge CDN, not backend
