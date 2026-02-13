@@ -70,7 +70,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "LumiSkin",
         platform: "meta",
         category: "Skincare",
-        thumbnail: "",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg",
         videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         duration: 15,
         heatmapZones: [
@@ -99,7 +99,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "PawVitals",
         platform: "tiktok",
         category: "Pet Care",
-        thumbnail: "",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg",
         videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         duration: 15,
         heatmapZones: [
@@ -128,7 +128,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "ZenBrew",
         platform: "meta",
         category: "Beverages",
-        thumbnail: "",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
         videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
         duration: 60,
         heatmapZones: [
@@ -158,7 +158,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "IronFuel",
         platform: "tiktok",
         category: "Fitness",
-        thumbnail: "",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg",
         videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
         duration: 15,
         heatmapZones: [
@@ -187,7 +187,7 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "ThreadEarth",
         platform: "youtube",
         category: "Fashion",
-        thumbnail: "",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg",
         videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
         duration: 15,
         heatmapZones: [
@@ -216,8 +216,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "AuraLux",
         platform: "meta",
         category: "Home & Living",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         duration: 52,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "ASMR Visual Hook" },
@@ -245,8 +245,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "FuelPlate",
         platform: "tiktok",
         category: "Food & Beverage",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "Speed Hook" },
@@ -274,8 +274,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "DreamLayer",
         platform: "meta",
         category: "Sleep & Wellness",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 12, type: "hook", label: "Problem Hook" },
@@ -303,8 +303,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "BrightByte",
         platform: "tiktok",
         category: "Personal Care",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/VolkswagenGTIReview.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 20, type: "hook", label: "Transformation Hook" },
@@ -331,8 +331,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "DeskCraft",
         platform: "youtube",
         category: "Office & Productivity",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
         duration: 60,
         heatmapZones: [
             { start: 0, end: 10, type: "hook", label: "Lifestyle Hook" },
@@ -360,8 +360,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "StrideMax",
         platform: "meta",
         category: "Fitness",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/WhatCarCanYouGetForAGrand.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 18, type: "hook", label: "Listicle Hook" },
@@ -388,8 +388,8 @@ export const MOCK_VIDEOS: VideoItem[] = [
         brand: "PawHaven",
         platform: "meta",
         category: "Non-Profit",
-        thumbnail: "",
-        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        thumbnail: "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+        videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
         duration: 15,
         heatmapZones: [
             { start: 0, end: 15, type: "hook", label: "Emotional Hook" },

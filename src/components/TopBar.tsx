@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar() {
     const { state, dispatch, getActiveBrief, searchVideos } = useStore();
@@ -56,31 +57,31 @@ export default function TopBar() {
         <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between px-5 py-2.5 border-b border-lens-border/50 bg-lens-bg/80 backdrop-blur-lg z-50 relative"
+            className="flex items-center justify-between px-5 py-2.5 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-lg z-50 relative"
         >
             {/* Breadcrumbs */}
             <div className="flex items-center gap-2 text-[13px]">
                 <Link
                     href="/"
-                    className="flex items-center gap-1.5 text-lens-muted hover:text-lens-text transition-colors"
+                    className="flex items-center gap-1.5 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
                 >
                     <Home size={13} />
                     <span>Home</span>
                 </Link>
-                <ChevronRight size={11} className="text-lens-border" />
-                <span className="flex items-center gap-1.5 text-lens-muted">
+                <ChevronRight size={11} className="text-[var(--border)]" />
+                <span className="flex items-center gap-1.5 text-[var(--muted)]">
                     <Library size={13} />
                     Library
                 </span>
                 {brief && (
                     <>
-                        <ChevronRight size={11} className="text-lens-border" />
-                        <span className="flex items-center gap-1.5 text-lens-muted">
+                        <ChevronRight size={11} className="text-[var(--border)]" />
+                        <span className="flex items-center gap-1.5 text-[var(--muted)]">
                             <Clapperboard size={13} />
                             {brief.campaign}
                         </span>
-                        <ChevronRight size={11} className="text-lens-border" />
-                        <span className="text-lens-text font-medium">{brief.title}</span>
+                        <ChevronRight size={11} className="text-[var(--border)]" />
+                        <span className="text-[var(--foreground)] font-medium">{brief.title}</span>
                     </>
                 )}
             </div>
@@ -108,11 +109,11 @@ export default function TopBar() {
                                     if (e.key === "Escape") setSearchOpen(false);
                                 }}
                                 placeholder="Search ads — brand, category, platform..."
-                                className="w-full pl-9 pr-8 py-2 rounded-lg bg-lens-card border border-lens-border/50 text-sm text-lens-text placeholder:text-lens-muted/30 outline-none focus:border-white/15 transition-colors"
+                                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] text-sm text-[var(--foreground)] placeholder:text-[var(--muted)]/40 outline-none focus:border-[#CCFF00]/30 transition-colors"
                             />
                             <button
                                 onClick={() => setSearchOpen(false)}
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-lens-muted/40 hover:text-lens-text transition-colors"
+                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)]/40 hover:text-[var(--foreground)] transition-colors"
                             >
                                 <X size={14} />
                             </button>
@@ -124,17 +125,17 @@ export default function TopBar() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSearchOpen(true)}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-lens-card/50 border border-lens-border/30 text-[12px] text-lens-muted/40 hover:text-lens-muted hover:border-white/10 transition-all"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)] text-[12px] text-[var(--muted)]/60 hover:text-[var(--muted)] hover:border-[var(--foreground)]/10 transition-all"
                         >
                             <Search size={12} />
                             <span>Search ads</span>
-                            <kbd className="ml-2 text-[10px] text-lens-muted/20 bg-lens-bg px-1.5 py-0.5 rounded">/</kbd>
+                            <kbd className="ml-2 text-[10px] text-[var(--muted)]/30 bg-[var(--background)] px-1.5 py-0.5 rounded">/</kbd>
                         </motion.button>
                     )}
                 </AnimatePresence>
 
                 {state.isSearching && (
-                    <Loader2 size={14} className="ml-2 text-lens-muted animate-spin" />
+                    <Loader2 size={14} className="ml-2 text-[var(--muted)] animate-spin" />
                 )}
             </div>
 
@@ -142,21 +143,24 @@ export default function TopBar() {
             <div className="flex items-center gap-3">
                 {/* Search result count */}
                 {state.searchResults.length > 0 && !state.isSearching && (
-                    <span className="text-[11px] text-lens-muted/40">
+                    <span className="text-[11px] text-[var(--muted)]/50">
                         {state.searchResults.length} ads
                     </span>
                 )}
 
                 {/* Auto-save indicator */}
-                <div className="flex items-center gap-1.5 text-[11px] text-lens-muted/40">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/60" />
+                <div className="flex items-center gap-1.5 text-[11px] text-[var(--muted)]/50">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#CCFF00]/60" />
                     Auto-saved
                 </div>
+
+                {/* Theme toggle */}
+                <ThemeToggle />
 
                 {/* Sidebar toggle */}
                 <button
                     onClick={() => dispatch({ type: "TOGGLE_SIDEBAR" })}
-                    className="p-2 rounded-lg text-lens-muted/50 hover:text-lens-text hover:bg-white/[0.03] transition-all"
+                    className="p-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card)] transition-all"
                     title={state.sidebarOpen ? "Close Sidebar" : "Open Sidebar"}
                 >
                     {state.sidebarOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}

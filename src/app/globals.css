@@ -5,9 +5,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== DARK MODE (default) ===== */
 :root {
   --background: #0D0D0D;
   --foreground: #F2F2F2;
+  --surface: #161616;
+  --card: #1E1E1E;
+  --border: #2A2A2A;
+  --muted: #808080;
+}
+
+/* ===== LIGHT MODE ===== */
+[data-theme="light"] {
+  --background: #FAFAFA;
+  --foreground: #1A1A1A;
+  --surface: #FFFFFF;
+  --card: #F5F5F5;
+  --border: #E0E0E0;
+  --muted: #888888;
 }
 
 * {
@@ -57,7 +72,7 @@ body {
 /* Selection */
 ::selection {
   background: rgba(204, 255, 0, 0.2);
-  color: #F2F2F2;
+  color: var(--foreground);
 }
 
 /* Focus ring */
@@ -73,15 +88,14 @@ video::-webkit-media-controls {
 
 /* Omnibox */
 .omnibox-glow {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--card);
+  border: 1px solid var(--border);
   transition: all 0.3s ease;
 }
 
 .omnibox-glow:focus-within {
   border-color: rgba(204, 255, 0, 0.35);
   box-shadow: 0 0 0 4px rgba(204, 255, 0, 0.06);
-  background: rgba(255, 255, 255, 0.04);
 }
 
 /* Heatmap seekbar */
@@ -99,10 +113,10 @@ video::-webkit-media-controls {
 
 /* Glass */
 .glass {
-  background: rgba(13, 13, 13, 0.85);
+  background: color-mix(in srgb, var(--background) 85%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
 }
 
 /* Brief card */
@@ -111,8 +125,8 @@ video::-webkit-media-controls {
 }
 
 .brief-card:hover {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: var(--card);
+  border-color: var(--border);
 }
 
 /* Video overlay gradient */
@@ -128,27 +142,27 @@ video::-webkit-media-controls {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #F2F2F2;
+  color: var(--foreground);
 }
 
 .markdown-preview h2 {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.4rem;
-  color: #F2F2F2;
+  color: var(--foreground);
 }
 
 .markdown-preview h3 {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.4rem;
-  color: #F2F2F2;
+  color: var(--foreground);
 }
 
 .markdown-preview p {
   margin-bottom: 0.6rem;
   line-height: 1.65;
-  color: #999;
+  color: var(--muted);
 }
 
 .markdown-preview ul,
@@ -159,7 +173,7 @@ video::-webkit-media-controls {
 
 .markdown-preview li {
   margin-bottom: 0.2rem;
-  color: #999;
+  color: var(--muted);
 }
 
 .markdown-preview code {
@@ -175,12 +189,12 @@ video::-webkit-media-controls {
   border-left: 2px solid rgba(204, 255, 0, 0.3);
   padding-left: 0.75rem;
   margin: 0.5rem 0;
-  color: #808080;
+  color: var(--muted);
   font-style: italic;
 }
 
 .markdown-preview strong {
-  color: #F2F2F2;
+  color: var(--foreground);
   font-weight: 600;
 }
 

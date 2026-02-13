@@ -7,7 +7,6 @@ import {
     Play,
     ArrowLeft,
     TrendingUp,
-    Eye,
     MousePointerClick,
     X,
     Search,
@@ -23,9 +22,9 @@ const platformColors: Record<string, { bg: string; text: string }> = {
 };
 
 const tierBadge: Record<string, { bg: string; text: string; label: string }> = {
-    top: { bg: "bg-[#CCFF00]/15", text: "text-[#CCFF00]", label: "Top" },
+    top: { bg: "bg-[#CCFF00]/15", text: "text-[#CCFF00]", label: "⚡ Top" },
     high: { bg: "bg-[#9D8DF1]/15", text: "text-[#9D8DF1]", label: "High" },
-    mid: { bg: "bg-[#F2F2F2]/10", text: "text-[#F2F2F2]/70", label: "Mid" },
+    mid: { bg: "bg-white/10 dark:bg-white/10", text: "text-current opacity-50", label: "Mid" },
     low: { bg: "bg-[#FF3E3E]/10", text: "text-[#FF3E3E]/70", label: "Low" },
 };
 
@@ -50,51 +49,48 @@ export default function SearchGrid({ onSelectVideo, onClose }: SearchGridProps) 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 z-30 bg-lens-bg flex flex-col"
+            className="absolute inset-0 z-30 bg-[var(--background)] flex flex-col"
         >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-lens-border">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)]">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleClearSearch}
-                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-lens-muted hover:text-lens-text hover:bg-white/[0.04] transition-all"
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card)] transition-all"
                     >
-                        <ArrowLeft size={16} />
-                        <span>Back to feed</span>
+                        <ArrowLeft size={14} />
+                        <span>Feed</span>
                     </button>
-                    <div className="h-5 w-px bg-lens-border" />
+                    <div className="h-4 w-px bg-[var(--border)]" />
                     <div className="flex items-center gap-2">
-                        <Search size={14} className="text-[#CCFF00]/50" />
-                        <span className="text-sm text-lens-text">
+                        <Search size={12} className="text-[#CCFF00]/60" />
+                        <span className="text-xs text-[var(--foreground)] font-medium">
                             &ldquo;{state.searchQuery}&rdquo;
                         </span>
-                        <span className="text-[10px] text-[#CCFF00] bg-[#CCFF00]/10 px-2 py-0.5 rounded-full font-semibold">
-                            {results.length} result{results.length !== 1 ? "s" : ""}
+                        <span className="text-[9px] text-[#CCFF00] bg-[#CCFF00]/10 px-1.5 py-0.5 rounded-full font-bold">
+                            {results.length}
                         </span>
                     </div>
                 </div>
                 <button
                     onClick={handleClearSearch}
-                    className="p-2 rounded-lg text-lens-muted hover:text-lens-text hover:bg-white/[0.04] transition-all"
+                    className="p-1.5 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card)] transition-all"
                 >
-                    <X size={18} />
+                    <X size={16} />
                 </button>
             </div>
 
             {/* Grid */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-6">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4">
                 {results.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full gap-3">
-                        <Search size={40} className="text-lens-border" />
-                        <p className="text-lens-muted text-sm">
+                        <Search size={32} className="text-[var(--border)]" />
+                        <p className="text-[var(--muted)] text-sm">
                             No ads found for &ldquo;{state.searchQuery}&rdquo;
-                        </p>
-                        <p className="text-lens-muted/50 text-xs">
-                            Try searching by brand, category, or platform
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
                         {results.map((video, i) => (
                             <VideoCard
                                 key={video.id}
@@ -168,111 +164,106 @@ function VideoCard({
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: Math.min(index * 0.04, 0.35) }}
+            transition={{ duration: 0.2, delay: Math.min(index * 0.03, 0.3) }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="group relative flex flex-col rounded-xl overflow-hidden bg-lens-surface border border-lens-border hover:border-[#9D8DF1]/30 transition-all duration-300 hover:shadow-xl hover:shadow-black/30"
+            className="group relative flex flex-col rounded-lg overflow-hidden bg-[var(--card)] border border-[var(--border)] hover:border-[#9D8DF1]/30 transition-all duration-200 hover:shadow-lg"
         >
-            {/* Clickable video preview area */}
+            {/* Thumbnail / Video area — compact 4:3 landscape */}
             <button
                 onClick={onClick}
-                className="relative aspect-[9/14] bg-lens-bg overflow-hidden w-full text-left"
+                className="relative aspect-[4/3] overflow-hidden w-full text-left cursor-pointer"
             >
-                {/* Actual video — plays on hover */}
+                {/* Thumbnail image — always visible until hover */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {video.thumbnail && (
+                    <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${isHovering ? "opacity-0" : "opacity-100"}`}
+                    />
+                )}
+
+                {/* Video on hover */}
                 <video
                     ref={videoRef}
                     src={video.videoUrl}
                     muted
                     playsInline
-                    preload="metadata"
-                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${isHovering ? "opacity-100" : "opacity-0"}`}
+                    preload="none"
+                    poster={video.thumbnail}
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${isHovering ? "opacity-100" : "opacity-0"}`}
                 />
 
-                {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 z-10" />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent z-10" />
 
-                {/* Placeholder when not hovering */}
-                <div className={`absolute inset-0 flex items-center justify-center bg-lens-card transition-opacity duration-300 ${isHovering ? "opacity-0" : "opacity-100"}`}>
-                    <div className="flex flex-col items-center gap-2">
-                        <div className="w-11 h-11 rounded-full bg-[#CCFF00]/10 flex items-center justify-center border border-[#CCFF00]/20">
-                            <Play size={18} className="text-[#CCFF00]/70 ml-0.5" />
-                        </div>
-                        <span className="text-[10px] text-lens-muted/50 font-medium">{video.duration}s</span>
-                    </div>
-                </div>
-
-                {/* Play overlay on hover */}
-                <div className={`absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-200 ${isHovering ? "opacity-100" : "opacity-0"}`}>
-                    <div className="w-12 h-12 rounded-full bg-[#CCFF00]/20 backdrop-blur-sm flex items-center justify-center border border-[#CCFF00]/30">
-                        <Play size={20} className="text-white ml-0.5" fill="white" />
+                {/* Play icon on hover */}
+                <div className={`absolute inset-0 z-20 flex items-center justify-center transition-opacity duration-150 ${isHovering ? "opacity-100" : "opacity-0"}`}>
+                    <div className="w-9 h-9 rounded-full bg-[#CCFF00]/25 backdrop-blur-sm flex items-center justify-center border border-[#CCFF00]/30">
+                        <Play size={14} className="text-white ml-0.5" fill="white" />
                     </div>
                 </div>
 
                 {/* Platform badge */}
-                <div className={`absolute top-2.5 left-2.5 z-20 px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider backdrop-blur-sm ${platform.bg} ${platform.text}`}>
+                <div className={`absolute top-1.5 left-1.5 z-20 px-1.5 py-px rounded text-[8px] font-bold uppercase tracking-wider backdrop-blur-sm ${platform.bg} ${platform.text}`}>
                     {video.platform}
                 </div>
 
-                {/* Performance tier */}
+                {/* Tier */}
                 {tier && (
-                    <div className={`absolute top-2.5 right-2.5 z-20 px-2 py-0.5 rounded-full text-[9px] font-semibold backdrop-blur-sm ${tier.bg} ${tier.text}`}>
+                    <div className={`absolute top-1.5 right-1.5 z-20 px-1.5 py-px rounded text-[8px] font-semibold backdrop-blur-sm ${tier.bg} ${tier.text}`}>
                         {tier.label}
                     </div>
                 )}
 
-                {/* Title + Brand overlay — bottom */}
-                <div className="absolute bottom-0 left-0 right-0 z-20 p-3">
-                    <p className="text-white text-xs font-medium leading-snug line-clamp-2">{video.title}</p>
-                    <p className="text-[#CCFF00]/80 text-[11px] font-semibold mt-0.5">{video.brand}</p>
-                </div>
-            </button>
-
-            {/* Bottom bar with actions */}
-            <div className="px-3 py-2 flex items-center gap-2 border-t border-lens-border bg-lens-surface">
-                {/* Metrics */}
-                <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                    {video.spend && (
-                        <div className="flex items-center gap-1">
-                            <TrendingUp size={10} className="text-[#CCFF00]/40" />
-                            <span className="text-[10px] text-lens-muted">{video.spend}</span>
-                        </div>
-                    )}
-                    {video.impressions && (
-                        <div className="flex items-center gap-1">
-                            <Eye size={10} className="text-[#9D8DF1]/50" />
-                            <span className="text-[10px] text-lens-muted">{video.impressions}</span>
-                        </div>
-                    )}
-                    {video.ctr && (
-                        <div className="flex items-center gap-1">
-                            <MousePointerClick size={10} className="text-lens-muted/40" />
-                            <span className="text-[10px] text-lens-muted">{video.ctr}</span>
-                        </div>
-                    )}
+                {/* Duration badge */}
+                <div className="absolute bottom-1.5 right-1.5 z-20 px-1.5 py-px rounded bg-black/60 text-[9px] text-white/80 font-mono backdrop-blur-sm">
+                    {video.duration}s
                 </div>
 
-                {/* Actions: Love + Add to brief */}
-                <div className="flex items-center gap-1 shrink-0">
+                {/* Quick action buttons — appear on hover */}
+                <div className={`absolute bottom-1.5 left-1.5 z-20 flex items-center gap-1 transition-opacity duration-150 ${isHovering ? "opacity-100" : "opacity-0"}`}>
                     <button
                         onClick={handleLike}
-                        className={`p-1.5 rounded-md transition-all ${isLiked
-                            ? "text-[#FF3E3E] bg-[#FF3E3E]/10"
-                            : "text-lens-muted/40 hover:text-[#FF3E3E] hover:bg-[#FF3E3E]/5"}`}
-                        title={isLiked ? "Unlike" : "Love this ad"}
+                        className={`p-1 rounded backdrop-blur-sm transition-all ${isLiked
+                            ? "text-[#FF3E3E] bg-[#FF3E3E]/20"
+                            : "text-white/70 bg-black/40 hover:text-[#FF3E3E]"}`}
+                        title={isLiked ? "Unlike" : "Love"}
                     >
-                        <Heart size={13} fill={isLiked ? "currentColor" : "none"} />
+                        <Heart size={11} fill={isLiked ? "currentColor" : "none"} />
                     </button>
                     <button
                         onClick={handleAddToBrief}
-                        className={`p-1.5 rounded-md transition-all ${isInBrief
-                            ? "text-[#CCFF00] bg-[#CCFF00]/10"
-                            : "text-lens-muted/40 hover:text-[#CCFF00] hover:bg-[#CCFF00]/5"}`}
+                        className={`p-1 rounded backdrop-blur-sm transition-all ${isInBrief
+                            ? "text-[#CCFF00] bg-[#CCFF00]/20"
+                            : "text-white/70 bg-black/40 hover:text-[#CCFF00]"}`}
                         title={isInBrief ? "Remove from brief" : "Add to brief"}
                     >
-                        <Plus size={13} className={isInBrief ? "rotate-45" : ""} />
+                        <Plus size={11} className={isInBrief ? "rotate-45" : ""} />
                     </button>
+                </div>
+            </button>
+
+            {/* Card info — compact */}
+            <div className="px-2.5 py-2 flex flex-col gap-0.5">
+                <p className="text-[11px] font-medium text-[var(--foreground)] leading-tight line-clamp-1">{video.title}</p>
+                <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#CCFF00] font-semibold">{video.brand}</span>
+                    <div className="flex items-center gap-2">
+                        {video.spend && (
+                            <span className="flex items-center gap-0.5 text-[9px] text-[var(--muted)]">
+                                <TrendingUp size={8} /> {video.spend}
+                            </span>
+                        )}
+                        {video.ctr && (
+                            <span className="flex items-center gap-0.5 text-[9px] text-[var(--muted)]">
+                                <MousePointerClick size={8} /> {video.ctr}
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
         </motion.div>
