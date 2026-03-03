@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl http://localhost:3001/health)",
+      "Bash(curl \"http://localhost:3001/api/v1/videos?limit=1\")",
+      "Bash(docker compose -f \"c:/Users/Lenovo/OneDrive/Desktop/lens/backend/docker-compose.yml\" ps)",
+      "Bash(where curl)",
+      "Bash(\"/c/Program Files/Docker/Docker/resources/bin/docker\" compose -f \"c:/Users/Lenovo/OneDrive/Desktop/lens/backend/docker-compose.yml\" ps)",
+      "Bash(powershell.exe -Command \"docker compose -f ''c:\\\\Users\\\\Lenovo\\\\OneDrive\\\\Desktop\\\\lens\\\\backend\\\\docker-compose.yml'' ps\")",
+      "Bash(/c/Windows/System32/curl.exe -s http://localhost:3001/health)",
+      "Bash(/c/Windows/System32/curl.exe -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
+      "Bash(/c/Windows/System32/curl.exe -s -X POST http://localhost:3001/api/v1/ads/search -H \"Content-Type: application/json\" -d '{\"\"query\"\":\"\"skincare\"\",\"\"platform\"\":\"\"META\"\",\"\"country\"\":\"\"US\"\",\"\"limit\"\":5}')",
+      "Bash(/c/Windows/System32/curl.exe -s http://localhost:3001/health/services)",
+      "Bash(/c/Windows/System32/curl.exe -s -X POST http://localhost:3001/api/v1/ads/search -H \"Content-Type: application/json\" -d '{\"\"query\"\":\"\"nike\"\",\"\"platform\"\":\"\"META\"\",\"\"country\"\":\"\"US\"\",\"\"limit\"\":3}' --max-time 120)"
+    ]
+  }
+}

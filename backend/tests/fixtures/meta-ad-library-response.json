@@ -1,0 +1,76 @@
+{
+  "success": true,
+  "extract": {
+    "ads": [
+      {
+        "adLibraryId": "fb_ad_001",
+        "pageName": "LumiSkin",
+        "pageLogoUrl": "https://scontent.cdninstagram.com/lumiskin-logo.jpg",
+        "adText": "POV: You finally found the serum that actually works. 3 weeks of consistent use = this glow. Formulated with 20% Vitamin C + Hyaluronic Acid. First order 20% off.",
+        "headline": "Vitamin C Brightening Serum",
+        "ctaButtonText": "Shop Now",
+        "linkUrl": "https://lumiskin.com/products/vitamin-c-serum?utm_source=meta",
+        "mediaType": "video",
+        "imageUrls": [
+          "https://scontent.cdninstagram.com/lumiskin-ad-thumb.jpg"
+        ],
+        "isActive": true,
+        "startedRunning": "2026-01-15"
+      },
+      {
+        "adLibraryId": "fb_ad_002",
+        "pageName": "GlowMask Beauty",
+        "pageLogoUrl": "https://scontent.cdninstagram.com/glowmask-logo.jpg",
+        "adText": "I put this on at 10pm and woke up with the smoothest skin of my life. The overnight hydration mask that beauty editors are obsessed with. Try it risk-free.",
+        "headline": "Overnight Hydration Mask",
+        "ctaButtonText": "Try Risk-Free",
+        "linkUrl": "https://glowmask.co/overnight-mask",
+        "mediaType": "video",
+        "imageUrls": [
+          "https://scontent.cdninstagram.com/glowmask-ad-01.jpg",
+          "https://scontent.cdninstagram.com/glowmask-ad-02.jpg"
+        ],
+        "isActive": true,
+        "startedRunning": "2026-02-01"
+      },
+      {
+        "adLibraryId": "fb_ad_003",
+        "pageName": "DermaFix Pro",
+        "adText": "Dermatologist-developed. Clinically proven. Our retinol serum reduces fine lines by 47% in 8 weeks. Join 200,000+ women who trust DermaFix.",
+        "headline": "Clinical-Grade Retinol Serum",
+        "ctaButtonText": "Learn More",
+        "linkUrl": "https://dermafix.com/retinol",
+        "mediaType": "image",
+        "imageUrls": [
+          "https://scontent.cdninstagram.com/dermafix-ad-hero.jpg"
+        ],
+        "isActive": true,
+        "startedRunning": "2025-11-20"
+      },
+      {
+        "pageName": "  ",
+        "adText": "",
+        "mediaType": "image"
+      },
+      {
+        "adLibraryId": "fb_ad_005",
+        "pageName": "CleanSkin Co",
+        "adText": "Our new charcoal cleanser is here! Deep pore cleansing without stripping your skin's natural oils.",
+        "ctaButtonText": "Shop Now",
+        "linkUrl": "not-a-valid-url",
+        "mediaType": "carousel",
+        "imageUrls": [
+          "https://scontent.cdninstagram.com/cleanskin-1.jpg",
+          "invalid-url",
+          "https://scontent.cdninstagram.com/cleanskin-3.jpg"
+        ],
+        "isActive": true
+      }
+    ]
+  },
+  "screenshot": "https://api.firecrawl.dev/screenshots/abc123.png",
+  "metadata": {
+    "title": "Meta Ad Library",
+    "sourceURL": "https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=skincare+serum"
+  }
+}

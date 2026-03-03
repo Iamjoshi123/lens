@@ -1,0 +1,77 @@
+services:
+  # ─── API Server ──────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder        # Use builder stage in dev to include tsx
+    command: npx tsx watch src/index.ts
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      HOST: 0.0.0.0
+      DATABASE_URL: postgresql://lens:lens_dev_pass@postgres:5432/lens_dev
+      REDIS_URL: redis://redis:6379
+      FIRECRAWL_API_KEY: ${FIRECRAWL_API_KEY:?FIRECRAWL_API_KEY is required}
+      FIRECRAWL_BASE_URL: ${FIRECRAWL_BASE_URL:-https://api.firecrawl.dev/v1}
+      FIRECRAWL_TIMEOUT_MS: ${FIRECRAWL_TIMEOUT_MS:-30000}
+      FIRECRAWL_MAX_RETRIES: ${FIRECRAWL_MAX_RETRIES:-3}
+      FIRECRAWL_RETRY_DELAY_MS: ${FIRECRAWL_RETRY_DELAY_MS:-1000}
+      FIRECRAWL_DAILY_CREDIT_BUDGET: ${FIRECRAWL_DAILY_CREDIT_BUDGET:-500}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+    volumes:
+      - ./src:/app/src:ro
+      - ./package.json:/app/package.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # ─── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lens
+      POSTGRES_PASSWORD: lens_dev_pass
+      POSTGRES_DB: lens_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lens -d lens_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # ─── Redis ────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

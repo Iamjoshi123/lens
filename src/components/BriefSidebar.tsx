@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useStore } from "@/lib/store";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
+import { updateBrief, removeHook as apiRemoveHook } from "@/lib/api";
 import {
     PenLine,
     Eye,
@@ -36,14 +37,18 @@ export default function BriefSidebar() {
     const [collabEmail, setCollabEmail] = useState("");
 
 
+    // Debounced auto-save for brief content
+    const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        if (brief) {
-            dispatch({
-                type: "UPDATE_BRIEF_CONTENT",
-                payload: { briefId: brief.id, content: e.target.value },
-            });
-        }
+        if (!brief) return;
+        const content = e.target.value;
+        dispatch({ type: "UPDATE_BRIEF_CONTENT", payload: { briefId: brief.id, content } });
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = setTimeout(() => {
+            updateBrief(brief.id, { content }).catch(console.error);
+        }, 800);
     };
+    useEffect(() => () => { if (saveTimerRef.current) clearTimeout(saveTimerRef.current); }, []);
 
     const handleCreateBrief = () => {
         if (newBriefTitle.trim()) {
@@ -55,9 +60,9 @@ export default function BriefSidebar() {
     };
 
     const handleRemoveHook = (hookId: string) => {
-        if (brief) {
-            dispatch({ type: "REMOVE_HOOK", payload: { briefId: brief.id, hookId } });
-        }
+        if (!brief) return;
+        dispatch({ type: "REMOVE_HOOK", payload: { briefId: brief.id, hookId } });
+        apiRemoveHook(brief.id, hookId).catch(console.error);
     };
 
     const handleAddCollaborator = () => {

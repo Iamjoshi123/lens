@@ -1,7 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useReducer, useEffect, useCallback, useRef } from "react";
-import { Brief, Collaborator, HookSnippet, VideoItem, MOCK_BRIEFS, MOCK_VIDEOS } from "./mockData";
+import { Brief, Collaborator, HookSnippet, VideoItem } from "./mockData";
+import * as api from "./api";
 
 interface AppState {
     briefs: Brief[];
@@ -12,6 +13,9 @@ interface AppState {
     searchResults: VideoItem[];
     sidebarOpen: boolean;
     isSearching: boolean;
+    // Track loading state for initial data fetch
+    isLoadingVideos: boolean;
+    isLoadingBriefs: boolean;
 }
 
 type Action =
@@ -22,11 +26,16 @@ type Action =
     | { type: "SET_ACTIVE_BRIEF"; payload: string }
     | { type: "TOGGLE_SIDEBAR" }
     | { type: "SET_SIDEBAR"; payload: boolean }
+    | { type: "SET_VIDEOS"; payload: VideoItem[] }
+    | { type: "SET_LOADING_VIDEOS"; payload: boolean }
+    | { type: "SET_LOADING_BRIEFS"; payload: boolean }
     | { type: "ADD_HOOK"; payload: { briefId: string; hook: HookSnippet } }
     | { type: "REMOVE_HOOK"; payload: { briefId: string; hookId: string } }
     | { type: "UPDATE_BRIEF_CONTENT"; payload: { briefId: string; content: string } }
     | { type: "UPDATE_BRIEF_META"; payload: { briefId: string; title?: string; campaign?: string; angle?: string } }
     | { type: "CREATE_BRIEF"; payload: Brief }
+    | { type: "SET_BRIEFS"; payload: Brief[] }
+    | { type: "UPDATE_BRIEF"; payload: Brief }
     | { type: "ADD_REFERENCE_VIDEO"; payload: { briefId: string; videoId: string } }
     | { type: "REMOVE_REFERENCE_VIDEO"; payload: { briefId: string; videoId: string } }
     | { type: "LIKE_VIDEO"; payload: { briefId: string; videoId: string } }
@@ -57,6 +66,23 @@ function reducer(state: AppState, action: Action): AppState {
             return { ...state, sidebarOpen: !state.sidebarOpen };
         case "SET_SIDEBAR":
             return { ...state, sidebarOpen: action.payload };
+        case "SET_VIDEOS":
+            return { ...state, videos: action.payload };
+        case "SET_LOADING_VIDEOS":
+            return { ...state, isLoadingVideos: action.payload };
+        case "SET_LOADING_BRIEFS":
+            return { ...state, isLoadingBriefs: action.payload };
+        case "SET_BRIEFS":
+            return {
+                ...state,
+                briefs: action.payload,
+                activeBriefId: state.activeBriefId ?? action.payload[0]?.id ?? null,
+                isLoadingBriefs: false,
+            };
+        case "UPDATE_BRIEF": {
+            const briefs = state.briefs.map((b) => (b.id === action.payload.id ? action.payload : b));
+            return { ...state, briefs };
+        }
         case "ADD_HOOK": {
             const briefs = state.briefs.map((b) =>
                 b.id === action.payload.briefId
@@ -160,7 +186,6 @@ function reducer(state: AppState, action: Action): AppState {
             const briefs = state.briefs.map((b) =>
                 b.id === action.payload ? { ...b, archived: true, updatedAt: new Date().toISOString() } : b
             );
-            // If archiving the active brief, switch to first non-archived
             let activeBriefId = state.activeBriefId;
             if (activeBriefId === action.payload) {
                 const next = briefs.find((b) => !b.archived);
@@ -198,14 +223,16 @@ function reducer(state: AppState, action: Action): AppState {
 }
 
 const initialState: AppState = {
-    briefs: MOCK_BRIEFS,
-    activeBriefId: MOCK_BRIEFS[0]?.id || null,
-    activeVideoId: MOCK_VIDEOS[0]?.id || null,
-    videos: MOCK_VIDEOS,
+    briefs: [],
+    activeBriefId: null,
+    activeVideoId: null,
+    videos: [],
     searchQuery: "",
     searchResults: [],
     sidebarOpen: true,
     isSearching: false,
+    isLoadingVideos: true,
+    isLoadingBriefs: true,
 };
 
 interface StoreContextType {
@@ -220,52 +247,52 @@ interface StoreContextType {
 
 const StoreContext = createContext<StoreContextType | null>(null);
 
-const STORAGE_KEY = "lens-app-state";
-
 export function StoreProvider({ children }: { children: React.ReactNode }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const stateRef = useRef(state);
     stateRef.current = state;
 
-    // Load from localStorage on mount
+    // ── Fetch videos from API on mount ──────────────────────────────────────
     useEffect(() => {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Migrate old briefs that may lack new fields
-                const briefs = (parsed.briefs || MOCK_BRIEFS).map((b: Brief) => ({
-                    ...b,
-                    likedVideoIds: b.likedVideoIds || [],
-                    dislikedVideoIds: b.dislikedVideoIds || [],
-                    collaborators: b.collaborators || [],
-                    archived: b.archived || false,
-                }));
-                dispatch({
-                    type: "LOAD_STATE",
-                    payload: {
-                        briefs,
-                        activeBriefId: parsed.activeBriefId || MOCK_BRIEFS[0]?.id,
-                    },
-                });
-            }
-        } catch {
-            // Ignore parse errors
-        }
+        dispatch({ type: "SET_LOADING_VIDEOS", payload: true });
+        api.fetchVideos({ limit: 50 })
+            .then(({ videos }) => {
+                dispatch({ type: "SET_VIDEOS", payload: videos });
+                dispatch({ type: "SET_LOADING_VIDEOS", payload: false });
+            })
+            .catch((err) => {
+                console.error("Failed to load videos:", err);
+                dispatch({ type: "SET_LOADING_VIDEOS", payload: false });
+            });
     }, []);
 
-    // Save on brief changes
+    // ── Fetch briefs from API on mount ──────────────────────────────────────
+    useEffect(() => {
+        dispatch({ type: "SET_LOADING_BRIEFS", payload: true });
+        api.fetchBriefs()
+            .then((briefs) => {
+                dispatch({ type: "SET_BRIEFS", payload: briefs });
+            })
+            .catch((err) => {
+                console.error("Failed to load briefs:", err);
+                dispatch({ type: "SET_LOADING_BRIEFS", payload: false });
+            });
+    }, []);
+
+    // ── Restore active brief preference from localStorage ───────────────────
     useEffect(() => {
         try {
-            const toSave = {
-                briefs: state.briefs,
-                activeBriefId: state.activeBriefId,
-            };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-        } catch {
-            // Ignore
-        }
-    }, [state.briefs, state.activeBriefId]);
+            const saved = localStorage.getItem("lens-active-brief");
+            if (saved) dispatch({ type: "SET_ACTIVE_BRIEF", payload: saved });
+        } catch { /* ignore */ }
+    }, []);
+
+    // ── Persist active brief to localStorage ────────────────────────────────
+    useEffect(() => {
+        try {
+            if (state.activeBriefId) localStorage.setItem("lens-active-brief", state.activeBriefId);
+        } catch { /* ignore */ }
+    }, [state.activeBriefId]);
 
     const getActiveBrief = useCallback(() => {
         return state.briefs.find((b) => b.id === state.activeBriefId);
@@ -275,69 +302,82 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         return state.videos.find((v) => v.id === state.activeVideoId);
     }, [state.videos, state.activeVideoId]);
 
-    const searchVideos = useCallback(
-        (query: string) => {
-            dispatch({ type: "SET_SEARCH_QUERY", payload: query });
-            dispatch({ type: "SET_SEARCHING", payload: true });
+    // ── Search — scrapes Meta Ad Library via Firecrawl, then falls back to DB ──
+    const searchVideos = useCallback((query: string) => {
+        dispatch({ type: "SET_SEARCH_QUERY", payload: query });
+        dispatch({ type: "SET_SEARCHING", payload: true });
 
-            setTimeout(() => {
-                const q = query.toLowerCase();
-                const results = state.videos.filter(
-                    (v) =>
-                        v.title.toLowerCase().includes(q) ||
-                        v.brand.toLowerCase().includes(q) ||
-                        v.category.toLowerCase().includes(q) ||
-                        v.platform.toLowerCase().includes(q)
-                );
-                dispatch({
-                    type: "SET_SEARCH_RESULTS",
-                    payload: results.length > 0 ? results : state.videos,
-                });
-            }, 800);
-        },
-        [state.videos]
-    );
+        if (!query.trim()) {
+            // Empty query — clear results and show the full feed
+            dispatch({ type: "SET_SEARCH_RESULTS", payload: [] });
+            return;
+        }
 
-    const snipHook = useCallback(
-        (videoId: string) => {
-            const video = state.videos.find((v) => v.id === videoId);
-            const briefId = state.activeBriefId;
-            if (!video || !briefId) return;
+        // 1. Call the Firecrawl scraper — this ingests fresh ads then returns them
+        api.searchAds(query, "META", { limit: 20 })
+            .then(({ results }) => {
+                const scraped = results.map(api.adResultToVideoItem);
+                dispatch({ type: "SET_SEARCH_RESULTS", payload: scraped });
+                // Also merge scraped items into the main videos list so VideoModal works
+                dispatch({ type: "SET_VIDEOS", payload: [...scraped, ...stateRef.current.videos.filter(v => !scraped.find(s => s.id === v.id))] });
+            })
+            .catch((err) => {
+                console.error("Scraper search failed, falling back to DB:", err);
+                // Fallback: search the already-seeded videos table
+                api.fetchVideos({ q: query, limit: 50 })
+                    .then(({ videos }) => {
+                        dispatch({ type: "SET_SEARCH_RESULTS", payload: videos });
+                    })
+                    .catch((err2) => {
+                        console.error("DB search also failed:", err2);
+                        dispatch({ type: "SET_SEARCH_RESULTS", payload: stateRef.current.videos });
+                    });
+            });
+    }, []);
 
-            const hook: HookSnippet = {
-                id: `hook-${Date.now()}`,
-                videoId: video.id,
-                videoTitle: video.title,
-                thumbnail: video.thumbnail,
-                timestamp: "0:00 – 0:03",
-                notes: "",
-            };
+    // ── Snip hook — calls real API ───────────────────────────────────────────
+    const snipHook = useCallback((videoId: string) => {
+        const video = stateRef.current.videos.find((v) => v.id === videoId);
+        const briefId = stateRef.current.activeBriefId;
+        if (!video || !briefId) return;
 
-            dispatch({ type: "ADD_HOOK", payload: { briefId, hook } });
-            dispatch({ type: "ADD_REFERENCE_VIDEO", payload: { briefId, videoId } });
-        },
-        [state.videos, state.activeBriefId]
-    );
-
-    const createNewBrief = useCallback((title: string, campaign: string) => {
-        const brief: Brief = {
-            id: `b-${Date.now()}`,
-            title,
-            campaign,
-            angle: "",
-            content: `# ${title}\n\nStart writing your creative brief here...\n`,
-            hooks: [],
-            referenceVideoIds: [],
-            likedVideoIds: [],
-            dislikedVideoIds: [],
-            collaborators: [
-                { id: "u1", name: "You", email: "you@team.co", initials: "Y", color: "#5090f0" },
-            ],
-            archived: false,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+        // Optimistic update
+        const tempHook: HookSnippet = {
+            id: `hook-${Date.now()}`,
+            videoId: video.id,
+            videoTitle: video.title,
+            thumbnail: video.thumbnail,
+            timestamp: "0:00 – 0:03",
+            notes: "",
         };
-        dispatch({ type: "CREATE_BRIEF", payload: brief });
+        dispatch({ type: "ADD_HOOK", payload: { briefId, hook: tempHook } });
+        dispatch({ type: "ADD_REFERENCE_VIDEO", payload: { briefId, videoId } });
+
+        // Persist to API
+        api.addHook(briefId, videoId, 0, 3, "").then((realHook) => {
+            // Replace temp hook with the real one from API
+            dispatch({ type: "REMOVE_HOOK", payload: { briefId, hookId: tempHook.id } });
+            dispatch({ type: "ADD_HOOK", payload: { briefId, hook: realHook } });
+        }).catch((err) => {
+            console.error("Failed to save hook:", err);
+            // Rollback
+            dispatch({ type: "REMOVE_HOOK", payload: { briefId, hookId: tempHook.id } });
+        });
+
+        api.addReference(briefId, videoId).catch((err) => {
+            console.error("Failed to save reference:", err);
+        });
+    }, []);
+
+    // ── Create brief — calls real API ────────────────────────────────────────
+    const createNewBrief = useCallback((title: string, campaign: string) => {
+        api.createBrief({ title, campaign })
+            .then((brief) => {
+                dispatch({ type: "CREATE_BRIEF", payload: brief });
+            })
+            .catch((err) => {
+                console.error("Failed to create brief:", err);
+            });
     }, []);
 
     return (

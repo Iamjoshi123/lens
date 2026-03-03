@@ -1,0 +1,9 @@
+-- Migration 0003 rollback
+DROP TABLE IF EXISTS brief_reactions CASCADE;
+DROP TABLE IF EXISTS hook_snippets CASCADE;
+DROP TABLE IF EXISTS brief_references CASCADE;
+DROP TABLE IF EXISTS brief_collaborators CASCADE;
+DROP TABLE IF EXISTS user_briefs CASCADE;
+DROP TABLE IF EXISTS transcript_segments CASCADE;
+DROP TABLE IF EXISTS heatmap_zones CASCADE;
+DROP TABLE IF EXISTS videos CASCADE;
